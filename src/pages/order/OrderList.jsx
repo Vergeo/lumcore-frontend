@@ -33,7 +33,7 @@ const OrderList = () => {
 	};
 
 	const fetchItem = async (id) => {
-		return await axios.get(`${apiRoot}/items/${id}`);
+		return await axios.get(`${apiRoot}tems/${id}`);
 	};
 
 	useEffect(() => {

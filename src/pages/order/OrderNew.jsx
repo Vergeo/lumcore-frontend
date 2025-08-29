@@ -115,10 +115,7 @@ const OrderNew = () => {
 
 			console.log(newOrder);
 
-			const res = await axios.post(
-				"http://localhost:3500/sales/",
-				newOrder
-			);
+			const res = await axios.post(`${apiRoot}sales/`, newOrder);
 			console.log(res);
 			navigate("/orders");
 		} catch (err) {
