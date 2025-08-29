@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
+import { apiRoot } from "../../config/apiRoot";
 
 const OrderNew = () => {
 	const navigate = useNavigate();
@@ -14,7 +15,7 @@ const OrderNew = () => {
 	const [order, setOrder] = useState([]);
 
 	const getNumber = async () => {
-		const res = await axios.get("http://localhost:3500/sales/");
+		const res = await axios.get(`${apiRoot}sales/`);
 
 		var maximumNumber = 0;
 		res.data.forEach((sale) => {
@@ -25,7 +26,7 @@ const OrderNew = () => {
 
 	const getItems = async () => {
 		try {
-			const res = await axios.get("http://localhost:3500/items/");
+			const res = await axios.get(`${apiRoot}items/`);
 			// console.log(res.data);
 
 			setOrder(

@@ -2,6 +2,7 @@ import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { apiRoot } from "../../config/apiRoot";
 
 const OrderList = () => {
 	const navigate = useNavigate();
@@ -14,7 +15,7 @@ const OrderList = () => {
 
 	const fetchActiveSales = async () => {
 		try {
-			const res = await axios.get("http://localhost:3500/sales/");
+			const res = await axios.get(`${apiRoot}sales/`);
 			var tmp = [],
 				tmp2 = [];
 			res.data.forEach((sale) => {
@@ -32,7 +33,7 @@ const OrderList = () => {
 	};
 
 	const fetchItem = async (id) => {
-		return await axios.get(`http://localhost:3500/items/${id}`);
+		return await axios.get(`${apiRoot}/items/${id}`);
 	};
 
 	useEffect(() => {

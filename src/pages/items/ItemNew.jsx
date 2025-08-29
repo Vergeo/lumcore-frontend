@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { apiRoot } from "../../config/apiRoot";
 
 const ItemNew = () => {
 	const [name, setName] = useState("");
@@ -18,10 +19,7 @@ const ItemNew = () => {
 				price,
 			};
 			console.log(newItem);
-			const res = await axios.post(
-				"http://localhost:3500/items/",
-				newItem
-			);
+			const res = await axios.post(`${apiRoot}items/`, newItem);
 			console.log(res);
 			navigate("/items");
 		} catch (err) {

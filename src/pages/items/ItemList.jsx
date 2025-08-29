@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import { apiRoot } from "../../config/apiRoot";
 
 const ItemList = () => {
 	const [items, setItems] = useState([]);
@@ -11,7 +12,7 @@ const ItemList = () => {
 
 	const fetchItems = async () => {
 		try {
-			const res = await axios.get("http://localhost:3500/items/");
+			const res = await axios.get(`${apiRoot}items/`);
 			setItems(res.data);
 			console.log(items);
 		} catch (err) {

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiRoot } from "../../config/apiRoot";
 
 const OrderEdit = () => {
 	const navigate = useNavigate();
@@ -19,9 +20,7 @@ const OrderEdit = () => {
 
 	const getSale = async () => {
 		try {
-			const res = await axios.get(
-				`http://localhost:3500/sales/${params.saleId}`
-			);
+			const res = await axios.get(`${apiRoot}sales/${params.saleId}`);
 			setNumber(res.data.number);
 			setTableNumber(res.data.tableNumber);
 			setSale(res.data);
@@ -32,7 +31,7 @@ const OrderEdit = () => {
 
 	const getItems = async () => {
 		try {
-			const res = await axios.get("http://localhost:3500/items/");
+			const res = await axios.get(`${apiRoot}items/`);
 			// console.log(res.data);
 
 			setTempOrder(
@@ -141,10 +140,7 @@ const OrderEdit = () => {
 
 			console.log(newOrder);
 
-			const res = await axios.patch(
-				"http://localhost:3500/sales/",
-				newOrder
-			);
+			const res = await axios.patch(`${apiRoot}sales/`, newOrder);
 			navigate("/orders");
 		} catch (err) {
 			console.log(err);
@@ -177,10 +173,7 @@ const OrderEdit = () => {
 
 			console.log(newOrder);
 
-			const res = await axios.patch(
-				"http://localhost:3500/sales/",
-				newOrder
-			);
+			const res = await axios.patch(`${apiRoot}sales/`, newOrder);
 			navigate("/orders");
 		} catch (err) {
 			console.log(err);

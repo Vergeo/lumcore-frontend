@@ -1,12 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { apiRoot } from "../../config/apiRoot";
 
 const Users = () => {
 	const [users, setUsers] = useState([]);
 
 	const fetchUsers = async () => {
 		try {
-			const res = await axios.get("http://localhost:3500/users/");
+			const res = await axios.get(`${apiRoot}users/`);
 			setUsers(res.data);
 		} catch (err) {
 			console.log(err);

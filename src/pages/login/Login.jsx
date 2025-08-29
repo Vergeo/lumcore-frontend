@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../../contexts/currentUserProvider";
+import { apiRoot } from "../../config/apiRoot";
 
 const Login = () => {
 	const navigate = useNavigate();
@@ -14,22 +15,19 @@ const Login = () => {
 	const loginButtonClicked = async (e) => {
 		e.preventDefault();
 		const userObj = { username, password };
-		const res = await axios.post(
-			"http://localhost:3500/users/auth/",
-			userObj
-		);
+		const res = await axios.post(`${apiRoot}users/auth/`, userObj);
 		if (res.data) {
 			setCurrentUser(username);
 		}
 	};
 
 	const getUsers = async () => {
-		const res = await axios.get("http://localhost:3500/users/");
+		const res = await axios.get(`${apiRoot}users/`);
 		setUsers(res.data);
 	};
 
 	const checkUsername = async () => {
-		const users = await axios.get("http://localhost:3500/users/");
+		const users = await axios.get(`${apiRoot}users/`);
 		users.data.forEach((user) => {
 			if (user.username == currentUser) {
 				return true;

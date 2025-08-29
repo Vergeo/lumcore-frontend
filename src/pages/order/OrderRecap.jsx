@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
+import { apiRoot } from "../../config/apiRoot";
 
 const OrderRecap = () => {
 	const [items, setItems] = useState([]);
@@ -10,7 +11,7 @@ const OrderRecap = () => {
 
 	const getItems = async () => {
 		try {
-			const res = await axios.get("http://localhost:3500/items/");
+			const res = await axios.get(`${apiRoot}items/`);
 			setItems(
 				res.data.map((item) => {
 					return { name: item.name, quantity: 0, totalPrice: 0 };
@@ -22,7 +23,7 @@ const OrderRecap = () => {
 	};
 
 	const getSales = async () => {
-		const res = await axios.get("http://localhost:3500/sales/");
+		const res = await axios.get(`${apiRoot}sales/`);
 
 		var data = items.slice();
 		const date1 = new Date(date);

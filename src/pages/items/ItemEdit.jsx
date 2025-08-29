@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { apiRoot } from "../../config/apiRoot";
 
 const ItemEdit = () => {
 	const [name, setName] = useState("");
@@ -22,10 +23,7 @@ const ItemEdit = () => {
 
 			console.log(editedItem);
 
-			const res = await axios.patch(
-				"http://localhost:3500/items/",
-				editedItem
-			);
+			const res = await axios.patch(`${apiRoot}items/`, editedItem);
 
 			navigate("/items");
 			console.log(res);
@@ -43,13 +41,13 @@ const ItemEdit = () => {
 				price,
 			};
 			console.log(deletedItem);
-			// const res = await axios.delete("http://localhost:3500/items/", {
+			// const res = await axios.delete("${apiRoot}items/", {
 			// 	params: { id: params.itemId },
 			// });
 
 			const res = await axios({
 				method: "DELETE",
-				url: "http://localhost:3500/items/",
+				url: `${apiRoot}items/`,
 				data: { id: params.itemId },
 			});
 
@@ -62,9 +60,7 @@ const ItemEdit = () => {
 
 	const getItem = async () => {
 		try {
-			const res = await axios.get(
-				`http://localhost:3500/items/${params.itemId}`
-			);
+			const res = await axios.get(`${apiRoot}items/${params.itemId}`);
 			setName(res.data.name);
 			setCategory(res.data.category);
 			setPrice(res.data.price);
