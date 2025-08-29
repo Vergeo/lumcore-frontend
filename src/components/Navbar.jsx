@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../contexts/currentUserProvider";
 import axios from "axios";
+import { apiRoot } from "../config/apiRoot";
 
 const Navbar = () => {
 	const navigate = useNavigate();
@@ -9,12 +10,12 @@ const Navbar = () => {
 	const [users, setUsers] = useState([]);
 
 	const getUsers = async () => {
-		const res = await axios.get("http://localhost:3500/users/");
+		const res = await axios.get(`${apiRoot}users/`);
 		setUsers(res.data);
 	};
 
 	const checkUsername = async () => {
-		const users = await axios.get("http://localhost:3500/users/");
+		const users = await axios.get(`${apiRoot}users/`);
 		users.data.forEach((user) => {
 			if (user.username == currentUser) {
 				return true;
