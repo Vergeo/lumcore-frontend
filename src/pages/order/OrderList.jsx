@@ -15,14 +15,20 @@ const OrderList = () => {
 
 	const fetchActiveSales = async () => {
 		try {
+			const today = new Date();
+			today.setHours(0, 0, 0, 0);
 			const res = await axios.get(`${apiRoot}sales/`);
 			var tmp = [],
 				tmp2 = [];
 			res.data.forEach((sale) => {
-				if (sale.status == "active") {
-					tmp.push(sale);
-				} else {
-					tmp2.push(sale);
+				const date2 = new Date(sale.date);
+				date2.setHours(0, 0, 0, 0);
+				if (today.getTime() === date2.getTime()) {
+					if (sale.status == "active") {
+						tmp.push(sale);
+					} else {
+						tmp2.push(sale);
+					}
 				}
 			});
 			setActiveSales(tmp);
