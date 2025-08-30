@@ -9,20 +9,134 @@ const Order = ({ sale }) => {
 		let printContent = elementToPrint.innerHTML;
 
 		const date = new Date(sale2.date);
-		const dateHTML = `Date: ${date.toISOString().split("T")[0]} ${
-			date.toISOString().split("T")[1].split(".")[0]
+		const dateHTML = `Date: ${date.toLocaleString("en-GB").split(",")[0]} ${
+			date.toLocaleString("en-GB").split(",")[1]
 		}`;
 
-		let printWindow = window.open("", "", "height=1000,width=1000");
-		printWindow.document.write(
-			"<style>*{margin:0;padding:0;box-sizing:border-box}.container {width: 100%;display: flex;flex-direction: column;align-items: center;padding: 10px;} .price{text-align:right}table{width:100%}</style>"
-		);
-		printWindow.document.write(
-			`<div class='container'><h3>Mie Celor 99 Poligon</h3><h4>Jl. Amanzi Water Park</h4><h4>Citra Grand City</h4><p>No. Nota: ${sale.number}</p><p>${dateHTML}</p><hr style='width: 100%'/><table>${printContent}<tfoot><tr><td colspan="3"><hr/></td</tr><tr><td colspan='2' style='font-weight: bold'>Total</td><td colspan='2' style='font-weight: bold' class='price'>${total}</td></tr></tfoot></table><p>Terima Kasih</p></div>`
-		);
+		let printWindow = window.open("", "_blank");
+
+		printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Document</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+
+                    .container {
+                        width: 100%;
+                        background-color: aliceblue;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 10px;
+                    }
+
+                    .price {
+                        text-align: right;
+                    }
+
+                    table {
+                        width: 100%;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h3>Mie Celor 99 Poligon</h3>
+                    <h4>Jl. Amanzi Water Park</h4
+                    ><h4>Citra Grand City</h4>
+                    <p>No. Nota: ${sale.number}</p>
+                    <p>${dateHTML}</p>
+                    <hr style="width: 100%" />
+                    <table>
+                        <tbody>
+                        ${printContent}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><hr /></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="font-weight: bold">Total</td>
+                                <td class="price" style="font-weight: bold">${total}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    <p>Terima Kasih</p>
+                </div>
+            </body>
+        </html>
+        `);
+
+		// printWindow.document.write(`
+		//     <!DOCTYPE html>
+		//     <html>
+		//     <head>
+		//         <meta charset="utf-8"/>
+		//         <title>Receipt</title>
+		//         <style>
+		//             .container {
+		//                 width: 100%;
+		//                 display: flex;
+		//                 flex-direction: column;
+		//                 align-items: center;
+		//                 padding: 10px;
+		//             }
+		//             .price {
+		//                 text-align: right;
+		//             }
+		//             table {
+		//                 width: 100%;
+		//             }
+		//         </style>
+		//     </head>
+		//     <body>
+		//         <div class="container">
+		//             <h3>Mie Celor 99 Poligon</h3>
+		//             <h4>Jl. Amanzi Water Park</h4>
+		//             <h4>Citra Grand City</h4>
+		//             <p>No. Nota: ${sale2.number}</p>
+		//             <p>${dateHTML}</p>
+		//             <hr style="width: 100%"/>
+		//             <table>
+		//                 ${printContent}
+		//                 <tfoot>
+		//                     <tr><td colspan="3"><hr/></td></tr>
+		//                     <tr>
+		//                         <td colspan="2" style="font-weight: bold">Total</td>
+		//                         <td colspan="2" style="font-weight: bold" class="price">${total}</td>
+		//                     </tr>
+		//                 </tfoot>
+		//             </table>
+		//             <p>Terima Kasih</p>
+		//         </div>
+		//     </body>
+		//     </html>
+		// `);
+
 		printWindow.document.close();
-		printWindow.print();
-		printWindow.close();
+
+		// Give the browser a moment to render, then print
+		printWindow.onload = () => {
+			printWindow.print();
+			printWindow.close();
+		};
+		// printWindow.document.write(
+		// 	"<style>.container {width: 100%;display: flex;flex-direction: column;align-items: center;padding: 10px;} .price{text-align:right}table{width:100%}</style>"
+		// );
+		// printWindow.document.write(
+		// 	`<div class='container'><h3>Mie Celor 99 Poligon</h3><h4>Jl. Amanzi Water Park</h4><h4>Citra Grand City</h4><p>No. Nota: ${sale.number}</p><p>${dateHTML}</p><hr style='width: 100%'/><table>${printContent}<tfoot><tr><td colspan="3"><hr/></td</tr><tr><td colspan='2' style='font-weight: bold'>Total</td><td colspan='2' style='font-weight: bold' class='price'>${total}</td></tr></tfoot></table><p>Terima Kasih</p></div>`
+		// );
+		// printWindow.document.close();
+		// printWindow.print();
+		// printWindow.close();
 	};
 
 	var total = 0;
