@@ -21,12 +21,9 @@ const ItemEdit = () => {
 				price,
 			};
 
-			console.log(editedItem);
-
 			const res = await axios.patch(`${apiRoot}items/`, editedItem);
 
 			navigate("/items");
-			console.log(res);
 		} catch (err) {
 			console.log(err);
 		}
@@ -50,8 +47,6 @@ const ItemEdit = () => {
 				url: `${apiRoot}items/`,
 				data: { id: params.itemId },
 			});
-
-			console.log(res);
 			navigate("/items");
 		} catch (err) {
 			console.log(err);

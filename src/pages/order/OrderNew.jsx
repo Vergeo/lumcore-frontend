@@ -11,6 +11,7 @@ const OrderNew = () => {
 	const [activeCategory, setActiveCategory] = useState("");
 	const [number, setNumber] = useState(0);
 	const [tableNumber, setTableNumber] = useState(0);
+	const [totalPrice, setTotalPrice] = useState(0);
 
 	const [order, setOrder] = useState([]);
 
@@ -113,10 +114,7 @@ const OrderNew = () => {
 				date: new Date(),
 			};
 
-			console.log(newOrder);
-
 			const res = await axios.post(`${apiRoot}sales/`, newOrder);
-			console.log(res);
 			navigate("/orders");
 		} catch (err) {
 			console.log(err);
@@ -128,17 +126,30 @@ const OrderNew = () => {
 		getNumber();
 	}, []);
 
+	useEffect(() => {
+		var total = 0;
+		order.forEach((item) => {
+			if (item.quantity > 0) {
+				total += item.price * item.quantity;
+			}
+		});
+		setTotalPrice(total);
+	}, [order]);
+
 	return (
 		<div className="w-screen min-h-screen bg-[var(--white)] flex">
 			<Navbar />
 			<div className="w-full flex py-6 px-3 bg-(--white)">
 				<div className="flex flex-col bg-(--white) w-2/3">
-					<div className="flex bg-(--dark-mint) p-2 gap-2 wrap">
+					<div className="text-2xl font-bold text-(--dark-mint)">
+						Pesanan Baru
+					</div>
+					<div className="flex bg-(--dark-mint) p-2 gap-2 wrap rounded-sm">
 						{categories.map((category) => {
 							return (
 								<div
 									key={category}
-									className="px-3 py-1 bg-(--light-mint) cursor-pointer hover:bg-(--mint)"
+									className="px-3 py-1 bg-(--light-mint) cursor-pointer hover:bg-(--mint) rounded-sm transition-all ease-in"
 								>
 									<p
 										onClick={() => {
@@ -151,17 +162,17 @@ const OrderNew = () => {
 							);
 						})}
 					</div>
-					<div className="flex gap-3 flex-wrap mt-3">
+					<div className="flex gap-3 flex-wrap mt-3 justify-">
 						{items[activeCategory]?.map((item) => {
 							return (
 								<div
 									key={item.name}
-									className="w-40 h-min-20 bg-(--mint) flex flex-col gap-2 items-center p-3 text-(--white) text-center"
+									className="w-40 h-min-20 bg-(--mint) flex flex-col gap-2 items-center p-3 text-(--white) text-center rounded-sm"
 								>
 									{item.name}
 									<div className="flex gap-2">
 										<div
-											className="w-5 h-5 bg-green-200 flex items-center justify-center text-(--dark-mint) cursor-pointer hover:bg-green-400"
+											className="w-10 text-2xl h-7 rounded-sm bg-green-200 flex items-center justify-center text-(--dark-mint) cursor-pointer hover:bg-green-400 transition-all ease-in"
 											onClick={() => {
 												addOrder(item.name);
 											}}
@@ -170,7 +181,7 @@ const OrderNew = () => {
 										</div>
 										<div>{order[item.name]?.quantity}</div>
 										<div
-											className="w-5 h-5 bg-red-200  flex items-center justify-center text-(--dark-mint) cursor-pointer hover:bg-red-400"
+											className="w-10 text-2xl h-7 rounded-sm bg-red-200  flex items-center justify-center text-(--dark-mint) cursor-pointer hover:bg-red-400 transition-all ease-in"
 											onClick={() => {
 												removeOrder(item.name);
 											}}
@@ -183,9 +194,9 @@ const OrderNew = () => {
 						})}
 					</div>
 				</div>
-				<div className="flex flex-col bg-(--light-mint) w-1/3 ml-3 p-2 gap-2">
+				<div className="flex flex-col bg-(--light-mint) w-1/3 ml-3 p-2 gap-2 rounded-sm shadow-md">
 					<div>
-						<label htmlFor="number">Nomor Nota: </label>
+						<label htmlFor="number">No. Nota </label>
 						<input
 							type="text"
 							name=""
@@ -194,12 +205,12 @@ const OrderNew = () => {
 								setNumber(e.target.value);
 							}}
 							value={number}
-							className="bg-(--mint)"
+							className="px-2 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in  rounded-sm"
 							autoComplete="off"
 						/>
 					</div>
 					<div>
-						<label htmlFor="tableNumber">Nomor Meja: </label>
+						<label htmlFor="tableNumber">No. Meja </label>
 						<input
 							type="text"
 							name=""
@@ -208,21 +219,21 @@ const OrderNew = () => {
 								setTableNumber(e.target.value);
 							}}
 							value={tableNumber}
-							className="bg-(--mint)"
+							className="px-2 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in  rounded-sm"
 							autoComplete="off"
 						/>
 					</div>
 					<table>
-						<thead>
+						<thead className="bg-(--mint) text-(--white)">
 							<tr>
-								<th className="border-black border-2 text-center">
-									Qty
+								<th className="text-center rounded-tl-sm">
+									Banyak
 								</th>
-								<th className="border-black border-2 text-center">
+								<th className="text-center border-l-2 border-(--light-mint)">
 									Item
 								</th>
-								<th className="border-black border-2 text-center">
-									Price
+								<th className="text-center border-l-2 border-(--light-mint) rounded-tr-sm">
+									Harga
 								</th>
 							</tr>
 						</thead>
@@ -231,13 +242,13 @@ const OrderNew = () => {
 								if (item.quantity > 0) {
 									return (
 										<tr key={item.name}>
-											<td className="border-black border-2 text-center">
+											<td className="border-t-2 border-(--light-mint) bg-gray-200 text-center">
 												{item.quantity}
 											</td>
-											<td className="border-black border-2 text-center">
+											<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center">
 												{item.name}
 											</td>
-											<td className="border-black border-2 text-center">
+											<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center">
 												{item.price * item.quantity}
 											</td>
 										</tr>
@@ -245,15 +256,28 @@ const OrderNew = () => {
 								}
 							})}
 						</tbody>
+						<tfoot>
+							<tr>
+								<td
+									colSpan={2}
+									className="bg-gray-300 rounded-bl-sm border-t-2 border-(--light-mint) text-center font-bold"
+								>
+									Total
+								</td>
+								<td className="bg-gray-300 rounded-bl-sm border-t-2 border-l-2 border-(--light-mint) text-center rounded-br-md font-bold">
+									{totalPrice}
+								</td>
+							</tr>
+						</tfoot>
 					</table>
 
 					<div
-						className="px-3 py-1 bg-(--mint) text-(--white) w-fit cursor-pointer hover:bg-(--dark-mint)"
+						className="w-fit bg-(--mint) text-(--white) px-3 py-1 cursor-pointer hover:bg-(--dark-mint) rounded-sm transition-all ease-in"
 						onClick={() => {
 							saveOrder();
 						}}
 					>
-						Save
+						Simpan
 					</div>
 				</div>
 			</div>

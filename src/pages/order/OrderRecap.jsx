@@ -62,13 +62,16 @@ const OrderRecap = () => {
 
 	useEffect(() => {
 		getSales();
-		console.log(items);
+		// console.log(items);
 	}, [items, date]);
 
 	return (
 		<div className="w-screen min-h-screen bg-[var(--white)] flex">
 			<Navbar />
-			<div className="w-full py-6 px-3 flex flex-col gap-1">
+			<div className="w-full py-6 px-3 pr-6 flex flex-col gap-1 items-center">
+				<div className="text-2xl text-left text-(--dark-mint) font-bold">
+					Rekap Pesanan
+				</div>
 				<input
 					type="date"
 					name=""
@@ -77,13 +80,18 @@ const OrderRecap = () => {
 						setDate(e.target.value);
 					}}
 					value={date}
+					className="bg-(--light-mint) hover:bg-(--mint) transition-all ease-in p-2 w-fit rounded-sm cursor-pointer"
 				/>
-				<table>
-					<thead>
+				<table className="w-4/5">
+					<thead className="bg-(--light-mint)">
 						<tr>
-							<th>Item</th>
-							<th>Quantity</th>
-							<th>Price</th>
+							<th className="p-1 rounded-tl-sm">Item</th>
+							<th className="p-1 border-l-2 border-(--white)">
+								Banyak
+							</th>
+							<th className="p-1 border-l-2 border-(--white) rounded-tr-sm">
+								Harga
+							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -91,16 +99,35 @@ const OrderRecap = () => {
 							if (item.quantity > 0) {
 								return (
 									<tr key={item.name}>
-										<td>{item.name}</td>
-										<td>{item.quantity}</td>
-										<td>{item.totalPrice}</td>
+										<td className="p-1 border-t-2 border-(--white) bg-gray-200 text-center">
+											{item.name}
+										</td>
+										<td className="p-1 border-l-2 border-t-2 border-(--white) bg-gray-200 text-center">
+											{item.quantity}
+										</td>
+										<td className="p-1 border-l-2 border-t-2 border-(--white) bg-gray-200 text-center">
+											{item.totalPrice}
+										</td>
 									</tr>
 								);
 							}
 						})}
 					</tbody>
+
+					<tfoot>
+						<tr>
+							<td
+								colSpan={2}
+								className="bg-gray-300 rounded-bl-sm border-t-2 border-(--white) text-center font-bold"
+							>
+								Total
+							</td>
+							<td className="bg-gray-300 rounded-bl-sm border-l-2 border-t-2 border-(--white) text-center rounded-br-md font-bold">
+								{totalSale}
+							</td>
+						</tr>
+					</tfoot>
 				</table>
-				{totalSale}
 			</div>
 		</div>
 	);

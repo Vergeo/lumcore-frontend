@@ -27,8 +27,7 @@ const Login = () => {
 	};
 
 	const checkUsername = async () => {
-		const users = await axios.get(`${apiRoot}users/`);
-		users.data.forEach((user) => {
+		users.forEach((user) => {
 			if (user.username == currentUser) {
 				return true;
 			}
@@ -50,8 +49,8 @@ const Login = () => {
 
 	return (
 		<div className="w-screen h-screen bg-[var(--mint)] flex items-center justify-center">
-			<div className="w-90 h-120 bg-[var(--white)] flex flex-col items-center justify-center">
-				<h1 className="text-[var(--dark-mint)] text-xl font-bold">
+			<div className="w-90 h-120 bg-[var(--light-mint)] flex flex-col items-center justify-center rounded-md shadow-md">
+				<h1 className="text-[var(--dark-mint)] text-2xl font-bold">
 					Login
 				</h1>
 				<form
@@ -71,7 +70,7 @@ const Login = () => {
 							}}
 							value={username}
 							required
-							className="px-1 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in"
+							className="px-2 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in  rounded-sm"
 						/>
 					</div>
 					<div className="flex flex-col">
@@ -85,14 +84,14 @@ const Login = () => {
 							}}
 							value={password}
 							required
-							className="px-1 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in"
+							className="px-2 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in  rounded-sm"
 						/>
 					</div>
 					<div className="flex flex-col items-center">
 						<input
 							type="submit"
 							value="Log In"
-							className="w-fit bg-(--mint) text-(--white) px-3 py-1 cursor-pointer hover:bg-(--dark-mint)"
+							className="w-fit bg-(--mint) text-(--white) px-3 py-1 cursor-pointer hover:bg-(--dark-mint) rounded-sm transition-all ease-in"
 						/>
 					</div>
 				</form>

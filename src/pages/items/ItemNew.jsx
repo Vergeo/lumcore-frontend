@@ -18,9 +18,7 @@ const ItemNew = () => {
 				category,
 				price,
 			};
-			console.log(newItem);
 			const res = await axios.post(`${apiRoot}items/`, newItem);
-			console.log(res);
 			navigate("/items");
 		} catch (err) {
 			console.log(err);

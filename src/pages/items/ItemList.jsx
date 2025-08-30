@@ -14,7 +14,6 @@ const ItemList = () => {
 		try {
 			const res = await axios.get(`${apiRoot}items/`);
 			setItems(res.data);
-			console.log(items);
 		} catch (err) {
 			console.log(err);
 		}
@@ -27,9 +26,11 @@ const ItemList = () => {
 		<div className="w-screen min-h-screen bg-[var(--white)] flex">
 			<Navbar />
 			<div className="w-full py-6 px-3 flex flex-col items-center gap-1">
-				<h1 className="text-lg">Item List</h1>
+				<div className="text-2xl text-left text-(--dark-mint) font-bold">
+					Item List
+				</div>
 				<div
-					className="bg-(--light-mint) px-3 py-1 cursor-pointer hover:bg-(--mint)"
+					className="bg-(--light-mint) px-3 py-1 cursor-pointer hover:bg-(--mint) rounded-sm transition-all ease-in"
 					onClick={() => {
 						navigate("/items/new");
 					}}
@@ -39,16 +40,16 @@ const ItemList = () => {
 				<table className="w-4/5 bg-white">
 					<thead>
 						<tr>
-							<th className="bg-(--light-mint) border-b-2 border-gray-100 p-1">
+							<th className="bg-(--light-mint) border-white p-1 rounded-tl-sm">
 								Name
 							</th>
-							<th className="bg-(--light-mint) border-b-2 border-gray-100 p-1">
+							<th className="bg-(--light-mint) border-l-2 border-white p-1">
 								Category
 							</th>
-							<th className="bg-(--light-mint) border-b-2 border-gray-100 p-1">
+							<th className="bg-(--light-mint) border-l-2 border-white p-1">
 								Price
 							</th>
-							<th className="bg-(--light-mint) border-b-2 border-gray-100 p-1">
+							<th className="bg-(--light-mint) border-l-2 border-white p-1 rounded-tr-sm">
 								Edit
 							</th>
 						</tr>
@@ -57,16 +58,16 @@ const ItemList = () => {
 						{items.map((item) => {
 							return (
 								<tr key={item._id}>
-									<td className="border-b-2 border-gray-100 p-1">
+									<td className="border-t-2 border-white p-1 bg-gray-200 text-center">
 										{item.name}
 									</td>
-									<td className="border-b-2 border-gray-100 p-1">
+									<td className="border-t-2 border-l-2 border-white p-1 bg-gray-200 text-center">
 										{item.category}
 									</td>
-									<td className="border-b-2 border-gray-100 p-1">
+									<td className="border-t-2 border-l-2 border-white p-1 bg-gray-200 text-center">
 										{item.price}
 									</td>
-									<td className="border-b-2 border-gray-100 p-1">
+									<td className="border-t-2 border-l-2 border-white p-1 bg-gray-200 text-center">
 										<Link
 											className="cursor-pointer"
 											to={`/items/edit/${item._id}`}
@@ -78,6 +79,16 @@ const ItemList = () => {
 							);
 						})}
 					</tbody>
+					<tfoot>
+						<tr>
+							<td
+								colSpan={4}
+								className="border-t-2 border-white bg-gray-300 text-gray-300 rounded-b-sm"
+							>
+								-
+							</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
