@@ -15,4 +15,12 @@ html {
 	--light-mint: #add2c9;
 	--mint: #5ea3a3;
 	--dark-mint: #488b8f;
+
+	--bg-light: hsl(0, 0%, 100%);
+	--bg: hsl(0, 0%, 95%);
+	--bg-dark: hsl(0, 0%, 90%);
+
+	--accent-light: hsl(185, 30%, 40%);
+	--accent: hsl(185, 30%, 40%);
+	--accent-dark: hsl(185, 30%, 40%);
 }

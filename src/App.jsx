@@ -9,24 +9,41 @@ import ItemEdit from "./pages/items/ItemEdit";
 import OrderNew from "./pages/order/OrderNew";
 import OrderEdit from "./pages/order/OrderEdit";
 import OrderRecap from "./pages/order/OrderRecap";
+import RequireAuth from "./components/RequireAuth";
+import Layout from "./components/Layout";
 
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<Login />} />
+				<Route element={<Layout />}>
+					<Route path="/" element={<Login />} />
 
-				<Route path="items">
-					<Route index element={<ItemList />} />
-					<Route path="new" element={<ItemNew />} />
-					<Route path="edit/:itemId" element={<ItemEdit />} />
-				</Route>
+					<Route
+						element={
+							<RequireAuth
+								allowedRoles={["Employee", "Manager"]}
+							/>
+						}
+					>
+						<Route path="orders">
+							<Route index element={<OrderList />} />
+							<Route path="new" element={<OrderNew />} />
+							<Route path="recap" element={<OrderRecap />} />
+							<Route
+								path="edit/:saleId"
+								element={<OrderEdit />}
+							/>
+						</Route>
+					</Route>
 
-				<Route path="orders">
-					<Route index element={<OrderList />} />
-					<Route path="new" element={<OrderNew />} />
-					<Route path="recap" element={<OrderRecap />} />
-					<Route path="edit/:saleId" element={<OrderEdit />} />
+					<Route element={<RequireAuth allowedRoles={["Manager"]} />}>
+						<Route path="items">
+							<Route index element={<ItemList />} />
+							<Route pzath="new" element={<ItemNew />} />
+							<Route path="edit/:itemId" element={<ItemEdit />} />
+						</Route>
+					</Route>
 				</Route>
 			</Routes>
 		</BrowserRouter>

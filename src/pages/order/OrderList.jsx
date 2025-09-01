@@ -1,15 +1,12 @@
 import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { apiRoot } from "../../config/apiRoot";
 import Order from "./Order";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const OrderList = () => {
 	const navigate = useNavigate();
-
-	// setActiveOrders(2);
-	// localStorage.setItem("activeOrders", 2);
+	const axiosPrivate = useAxiosPrivate();
 
 	const [activeSales, setActiveSales] = useState([]);
 	const [finishedSales, setFinishedSales] = useState([]);
@@ -18,7 +15,7 @@ const OrderList = () => {
 		try {
 			const today = new Date();
 			today.setHours(0, 0, 0, 0);
-			const res = await axios.get(`${apiRoot}sales/`);
+			const res = await axiosPrivate.get(`/sales`);
 			var tmp = [],
 				tmp2 = [];
 			res.data.forEach((sale) => {
@@ -36,13 +33,9 @@ const OrderList = () => {
 			setFinishedSales(tmp2);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
-
-	const fetchItem = async (id) => {
-		return await axios.get(`${apiRoot}tems/${id}`);
-	};
-
 	useEffect(() => {
 		fetchActiveSales();
 	}, []);
@@ -51,6 +44,13 @@ const OrderList = () => {
 		<div className="w-screen min-h-screen bg-[var(--white)] flex">
 			<Navbar />
 			<div className="w-full py-6 px-3">
+				<div
+					onClick={() => {
+						refresh();
+					}}
+				>
+					Refresh
+				</div>
 				<div className="text-2xl font-bold text-(--dark-mint) mt">
 					Pesanan Aktif
 				</div>

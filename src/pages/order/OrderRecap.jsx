@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
-import { apiRoot } from "../../config/apiRoot";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
 
 const OrderRecap = () => {
+	const axiosPrivate = useAxiosPrivate();
+	const navigate = useNavigate();
 	const [items, setItems] = useState([]);
 	const [sales, setSales] = useState([]);
 	const [totalSale, setTotalSale] = useState(0);
@@ -11,7 +13,7 @@ const OrderRecap = () => {
 
 	const getItems = async () => {
 		try {
-			const res = await axios.get(`${apiRoot}items/`);
+			const res = await axiosPrivate.get(`/items`);
 			setItems(
 				res.data.map((item) => {
 					return { name: item.name, quantity: 0, totalPrice: 0 };
@@ -19,41 +21,47 @@ const OrderRecap = () => {
 			);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
 	const getSales = async () => {
-		const res = await axios.get(`${apiRoot}sales/`);
+		try {
+			const res = await axiosPrivate.get(`/sales`);
 
-		var data = items.slice();
-		const date1 = new Date(date);
+			var data = items.slice();
+			const date1 = new Date(date);
 
-		date1.setHours(0, 0, 0, 0);
-		var total = 0;
+			date1.setHours(0, 0, 0, 0);
+			var total = 0;
 
-		res.data.forEach((sale) => {
-			const date2 = new Date(sale.date);
-			date2.setHours(0, 0, 0, 0);
-			if (date1.getTime() === date2.getTime()) {
-				sale.items.forEach((item) => {
-					data = data.map((item2) => {
-						if (item.name === item2.name) {
-							total += item.price * item.quantity;
-							return {
-								...item2,
-								quantity: item2.quantity + item.quantity,
-								totalPrice:
-									item2.totalPrice +
-									item.price * item.quantity,
-							};
-						}
-						return item2;
+			res.data.forEach((sale) => {
+				const date2 = new Date(sale.date);
+				date2.setHours(0, 0, 0, 0);
+				if (date1.getTime() === date2.getTime()) {
+					sale.items.forEach((item) => {
+						data = data.map((item2) => {
+							if (item.name === item2.name) {
+								total += item.price * item.quantity;
+								return {
+									...item2,
+									quantity: item2.quantity + item.quantity,
+									totalPrice:
+										item2.totalPrice +
+										item.price * item.quantity,
+								};
+							}
+							return item2;
+						});
 					});
-				});
-			}
-		});
-		setTotalSale(total);
-		setSales(data);
+				}
+			});
+			setTotalSale(total);
+			setSales(data);
+		} catch (err) {
+			console.log(err);
+			navigate("/");
+		}
 	};
 
 	useEffect(() => {

@@ -1,51 +1,33 @@
-import axios from "axios";
-import React, { use, useEffect, useState } from "react";
+import React, { use, useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../../contexts/currentUserProvider";
-import { apiRoot } from "../../config/apiRoot";
+import useAuth from "../../hooks/useAuth";
+import axios from "../../api/axios";
 
 const Login = () => {
+	const { setAuth } = useAuth();
 	const navigate = useNavigate();
-	const { currentUser, setCurrentUser } = getCurrentUser();
 
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
-	const [users, setUsers] = useState([]);
 
 	const loginButtonClicked = async (e) => {
 		e.preventDefault();
-		const userObj = { username, password };
-		const res = await axios.post(`${apiRoot}users/auth/`, userObj);
-		if (res.data) {
-			setCurrentUser(username);
+
+		try {
+			const userObj = { username, password };
+			const res = await axios.post("/auth", userObj, {
+				withCredentials: true,
+			});
+
+			const accessToken = res?.data?.accessToken;
+			const roles = res?.data?.roles;
+			// setAuth(res.data);
+			setAuth({ username, roles, accessToken });
+			navigate("/orders");
+		} catch (err) {
+			console.log(err);
 		}
 	};
-
-	const getUsers = async () => {
-		const res = await axios.get(`${apiRoot}users/`);
-		setUsers(res.data);
-	};
-
-	const checkUsername = async () => {
-		users.forEach((user) => {
-			if (user.username == currentUser) {
-				return true;
-			}
-		});
-		return false;
-	};
-
-	useEffect(() => {
-		if (currentUser && users.length) {
-			if (checkUsername()) {
-				navigate("/orders");
-			}
-		}
-	}, [currentUser, users]);
-
-	useEffect(() => {
-		getUsers();
-	}, []);
 
 	return (
 		<div className="w-screen h-screen bg-[var(--mint)] flex items-center justify-center">

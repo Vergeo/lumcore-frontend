@@ -1,11 +1,11 @@
-import axios from "axios";
 import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import { apiRoot } from "../../config/apiRoot";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const OrderNew = () => {
 	const navigate = useNavigate();
+	const axiosPrivate = useAxiosPrivate();
 	const [items, setItems] = useState({});
 	const [categories, setCategories] = useState([]);
 	const [activeCategory, setActiveCategory] = useState("");
@@ -16,18 +16,23 @@ const OrderNew = () => {
 	const [order, setOrder] = useState([]);
 
 	const getNumber = async () => {
-		const res = await axios.get(`${apiRoot}sales/`);
+		try {
+			const res = await axiosPrivate.get(`/sales`);
 
-		var maximumNumber = 0;
-		res.data.forEach((sale) => {
-			maximumNumber = Math.max(maximumNumber, sale.number);
-		});
-		setNumber(maximumNumber + 1);
+			var maximumNumber = 0;
+			res.data.forEach((sale) => {
+				maximumNumber = Math.max(maximumNumber, sale.number);
+			});
+			setNumber(maximumNumber + 1);
+		} catch (err) {
+			console.log(err);
+			navigate("/");
+		}
 	};
 
 	const getItems = async () => {
 		try {
-			const res = await axios.get(`${apiRoot}items/`);
+			const res = await axiosPrivate.get(`/items`);
 			// console.log(res.data);
 
 			setOrder(
@@ -68,6 +73,7 @@ const OrderNew = () => {
 			setActiveCategory(temp[0]);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
@@ -114,10 +120,11 @@ const OrderNew = () => {
 				date: new Date(),
 			};
 
-			const res = await axios.post(`${apiRoot}sales/`, newOrder);
+			const res = await axiosPrivate.post(`/sales`, newOrder);
 			navigate("/orders");
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 

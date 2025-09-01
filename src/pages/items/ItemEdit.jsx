@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiRoot } from "../../config/apiRoot";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ItemEdit = () => {
+	const axiosPrivate = useAxiosPrivate();
 	const [name, setName] = useState("");
 	const [category, setCategory] = useState("");
 	const [price, setPrice] = useState(0);
@@ -21,11 +21,12 @@ const ItemEdit = () => {
 				price,
 			};
 
-			const res = await axios.patch(`${apiRoot}items/`, editedItem);
+			const res = await axiosPrivate.patch(`/items`, editedItem);
 
 			navigate("/items");
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
@@ -37,30 +38,28 @@ const ItemEdit = () => {
 				category,
 				price,
 			};
-			console.log(deletedItem);
-			// const res = await axios.delete("${apiRoot}items/", {
-			// 	params: { id: params.itemId },
-			// });
 
-			const res = await axios({
+			const res = await axiosPrivate({
 				method: "DELETE",
-				url: `${apiRoot}items/`,
+				url: `/items`,
 				data: { id: params.itemId },
 			});
 			navigate("/items");
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
 	const getItem = async () => {
 		try {
-			const res = await axios.get(`${apiRoot}items/${params.itemId}`);
+			const res = await axiosPrivate.get(`/items/${params.itemId}`);
 			setName(res.data.name);
 			setCategory(res.data.category);
 			setPrice(res.data.price);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 

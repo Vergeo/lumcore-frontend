@@ -1,12 +1,12 @@
-import axios from "axios";
 import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate, useParams } from "react-router-dom";
-import { apiRoot } from "../../config/apiRoot";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const OrderEdit = () => {
 	const navigate = useNavigate();
 	const params = useParams();
+	const axiosPrivate = useAxiosPrivate();
 	const [items, setItems] = useState({});
 	const [categories, setCategories] = useState([]);
 	const [activeCategory, setActiveCategory] = useState("");
@@ -21,19 +21,19 @@ const OrderEdit = () => {
 
 	const getSale = async () => {
 		try {
-			const res = await axios.get(`${apiRoot}sales/${params.saleId}`);
+			const res = await axiosPrivate.get(`/sales/${params.saleId}`);
 			setNumber(res.data.number);
 			setTableNumber(res.data.tableNumber);
 			setSale(res.data);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
 	const getItems = async () => {
 		try {
-			const res = await axios.get(`${apiRoot}items/`);
-			// console.log(res.data);
+			const res = await axiosPrivate.get(`/items`);
 
 			setTempOrder(
 				res.data.map((item) => {
@@ -73,6 +73,7 @@ const OrderEdit = () => {
 			setActiveCategory(temp[0]);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
@@ -139,10 +140,11 @@ const OrderEdit = () => {
 				date: sale.date,
 			};
 
-			const res = await axios.patch(`${apiRoot}sales/`, newOrder);
+			const res = await axiosPrivate.patch(`/sales`, newOrder);
 			navigate("/orders");
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 
@@ -170,10 +172,11 @@ const OrderEdit = () => {
 				date: sale.date,
 			};
 
-			const res = await axios.patch(`${apiRoot}sales/`, newOrder);
+			const res = await axiosPrivate.patch(`/sales`, newOrder);
 			navigate("/orders");
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 

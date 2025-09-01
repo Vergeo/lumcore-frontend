@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { apiRoot } from "../../config/apiRoot";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ItemNew = () => {
+	const axiosPrivate = useAxiosPrivate();
 	const [name, setName] = useState("");
 	const [category, setCategory] = useState("");
 	const [price, setPrice] = useState(0);
@@ -18,10 +18,11 @@ const ItemNew = () => {
 				category,
 				price,
 			};
-			const res = await axios.post(`${apiRoot}items/`, newItem);
+			const res = await axiosPrivate.post(`/items`, newItem);
 			navigate("/items");
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 

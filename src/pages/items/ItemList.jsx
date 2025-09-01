@@ -1,21 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { apiRoot } from "../../config/apiRoot";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ItemList = () => {
 	const [items, setItems] = useState([]);
 	const [counter, setCounter] = useState(0);
 
+	const axiosPrivate = useAxiosPrivate();
+
 	const navigate = useNavigate();
 
 	const fetchItems = async () => {
 		try {
-			const res = await axios.get(`${apiRoot}items/`);
+			const res = await axiosPrivate.get(`/items`);
 			setItems(res.data);
 		} catch (err) {
 			console.log(err);
+			navigate("/");
 		}
 	};
 	useEffect(() => {
