@@ -44,13 +44,6 @@ const OrderList = () => {
 		<div className="w-screen min-h-screen bg-[var(--white)] flex">
 			<Navbar />
 			<div className="w-full py-6 px-3">
-				<div
-					onClick={() => {
-						refresh();
-					}}
-				>
-					Refresh
-				</div>
 				<div className="text-2xl font-bold text-(--dark-mint) mt">
 					Pesanan Aktif
 				</div>
