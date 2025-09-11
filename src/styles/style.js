@@ -1,0 +1,18 @@
+export const style = {
+	title: " text-5xl font-bold ",
+	subtitle: " text-lg font-bold ",
+	h1: " text-3xl text-(--accent) font-bold ",
+	h2: " text-xl text-(--accent) font-bold ",
+	h3: " text-lg text-(--accent) font-bold ",
+	p: " text-(--text) ",
+	p_muted: " text-(--text-muted) ",
+	error: " bg-(--alert-red) text-(--bg) w-full p-2 rounded-sm ",
+	card: " flex flex-col rounded-sm shadow-md items-center justify-center ",
+	button: " px-5 py-2 bg-(--accent) text-(--bg-light) hover:bg-(--accent-dark) rounded-sm shadow-sm transition-all ease-in cursor-pointer ",
+	button_muted:
+		" px-5 py-2 text-(--bg-light) bg-(--accent-dark) rounded-sm shadow-sm ",
+	text_input:
+		" px-2 pt-1 bg-(--bg-dark) border-b-4 border-(--bg-dark) outline-none focus:border-(--accent-dark) transition-all ease-in rounded-sm ",
+	accent_gradient: " bg-linear-to-br from-(--accent) to-(--accent-dark) ",
+	bg_gradient: " bg-linear-to-br from-(--bg-light) to-(--bg) ",
+};

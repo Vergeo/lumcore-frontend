@@ -20,7 +20,23 @@ html {
 	--bg: hsl(0, 0%, 95%);
 	--bg-dark: hsl(0, 0%, 90%);
 
-	--accent-light: hsl(185, 30%, 40%);
-	--accent: hsl(185, 30%, 40%);
+	--text: hsl(0, 0%, 5%);
+	--text-muted: hsl(0, 0%, 30%);
+
+	--light-gray: hsl(0, 0%, 60%);
+	--gray: hsl(0, 0%, 50%);
+	--dark-gray: hsl(0, 0%, 70%);
+
+	--accent-light: hsl(175, 30%, 80%);
+	--accent: hsl(180, 30%, 50%);
 	--accent-dark: hsl(185, 30%, 40%);
+
+	--alert-red: hsl(0, 50%, 60%);
+	--alert-red-dark: hsl(0, 50%, 50%);
+	--alert-yellow: hsl(50, 50%, 60%);
+	--alert-yellow-dark: hsl(50, 50%, 50%);
+	--alert-green: hsl(145, 50%, 60%);
+	--alert-green-dark: hsl(145, 50%, 50%);
+	--alert-blue: hsl(220, 50%, 60%);
+	--alert-blue-dark: hsl(220, 50%, 50%);
 }

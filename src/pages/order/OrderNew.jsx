@@ -230,6 +230,38 @@ const OrderNew = () => {
 							autoComplete="off"
 						/>
 					</div>
+					<div>
+						<div>
+							<input
+								type="radio"
+								name="type"
+								id="offline"
+								value="offline"
+								className="peer"
+							/>
+							<label
+								htmlFor="offline"
+								className="peer-checked:text-red-500"
+							>
+								Makan
+							</label>
+						</div>
+						<div>
+							<input
+								type="radio"
+								name="type"
+								id="online"
+								value="online"
+								className="peer"
+							/>
+							<label
+								htmlFor="dine-in"
+								className="peer-checked:text-red-500"
+							>
+								Online
+							</label>
+						</div>
+					</div>
 					<table>
 						<thead className="bg-(--mint) text-(--white)">
 							<tr>
