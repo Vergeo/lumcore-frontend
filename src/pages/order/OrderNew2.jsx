@@ -1,78 +1,3 @@
-// import { useNavigate } from "react-router-dom";
-// import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-// import Navbar from "../../components/Navbar";
-// import { style } from "../../styles/style";
-// import { useEffect, useState } from "react";
-
-// const orderNew = () => {
-// 	const navigate = useNavigate();
-// 	const axiosPrivate = useAxiosPrivate();
-
-// 	const [isLoading, setIsLoading] = useState(true);
-// 	const [menuItems, setMenuItems] = useState([]);
-// 	const [categories, setCategories] = useState([]);
-
-// 	const [currentCategory, setCurrentCategory] = useState();
-
-// 	const getMenuItems = async () => {
-// 		try {
-// 			setIsLoading(true);
-
-// 			const res = await axiosPrivate.get("items");
-
-// 			res.data.map((item) => {
-// 				setCategories((prev) => {
-// 					const updated = [...prev, item.category];
-// 					return updated.filter(
-// 						(val, i, arr) => arr.indexOf(val) === i
-// 					);
-// 				});
-
-// 				setMenuItems((prev) => {
-// 					const newItem = {
-// 						name: item.name,
-// 						category: item.category,
-// 						price: item.price,
-// 						quantity: 0,
-// 					};
-// 					return [...prev, newItem];
-// 				});
-// 			});
-
-// 			setCurrentCategory(res.data[0].category);
-
-// 			setIsLoading(false);
-// 		} catch (error) {
-// 			setIsLoading(false);
-// 		}
-// 	};
-
-// 	useEffect(() => {
-// 		getMenuItems();
-// 	}, []);
-
-// 	return (
-// 		<div className="w-screen min-h-screen bg-(--bg-dark) flex">
-// 			<Navbar />
-// 			<div className="w-full p-6">
-// 				<h1 className={style.h1}>Buat Pesanan Baru</h1>
-
-// 				<div className="flex w-full gap-5">
-// 					{categories.map((category) => {
-// 						return (
-// 							<div className="px-6 py-2 bg-(--bg-light) shadow-sm rounded-sm">
-// 								{category}
-// 							</div>
-// 						);
-// 					})}
-// 				</div>
-// 			</div>
-// 		</div>
-// 	);
-// };
-
-// export default orderNew;
-
 import React, { act, useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
@@ -249,8 +174,7 @@ const OrderNew = () => {
 							return (
 								<div
 									key={item.name}
-									className="w-40 h-min-20 bg-(--mint) flex flex-col 
-									gap-2 items-center p-3 text-(--white) text-center rounded-sm"
+									className="w-40 h-min-20 bg-(--mint) flex flex-col gap-2 items-center p-3 text-(--white) text-center rounded-sm"
 								>
 									{item.name}
 									<div className="flex gap-2">
@@ -306,7 +230,7 @@ const OrderNew = () => {
 							autoComplete="off"
 						/>
 					</div>
-					{/* <div>
+					<div>
 						<div>
 							<input
 								type="radio"
@@ -337,7 +261,7 @@ const OrderNew = () => {
 								Online
 							</label>
 						</div>
-					</div> */}
+					</div>
 					<table>
 						<thead className="bg-(--mint) text-(--white)">
 							<tr>
