@@ -12,49 +12,73 @@ const Navbar = () => {
 	}, []);
 
 	return (
-		<div className="w-52 h-screen bg-[var(--dark-mint)] px-2 py-5 flex flex-col gap-2 sticky top-0">
+		<div className="w-52 h-screen bg-(--accent) px-2 py-5 flex flex-col gap-5 sticky top-0">
+			<div className="text-(--accent-dark) p-2 text-lg font-bold bg-(--accent-light) rounded-sm shadow-md">
+				Welcome, {auth.username}
+			</div>
 			<div>
-				<div className="text-[var(--light-mint)] p-1 text-lg font-bold">
-					Welcome, {auth.username}
-				</div>
 				<div
-					className="text-[var(--white)] px-2 py-1 cursor-pointer hover:bg-[var(--mint)] transition-all ease-in rounded-sm"
+					className="text-(--bg-light) px-2 py-1 cursor-pointer hover:bg-(--accent-light) hover:text-(--text-muted) transition-all ease-in rounded-sm"
 					onClick={() => {
 						navigate("/orders/new");
 					}}
 				>
-					Pesanan Baru
+					<div className="flex gap-2 items-center">
+						<div className="h-full aspect-square">
+							<i class="fa-solid fa-plus"></i>
+						</div>
+						Pesanan Baru
+					</div>
 				</div>
 				<div
-					className="text-[var(--white)] px-2 py-1 cursor-pointer hover:bg-[var(--mint)] transition-all ease-in rounded-sm"
+					className="text-(--bg-light) px-2 py-1 cursor-pointer hover:bg-(--accent-light) hover:text-(--text-muted) transition-all ease-in rounded-sm"
 					onClick={() => {
 						navigate("/orders");
 					}}
 				>
-					Daftar Pesanan
+					<div className="flex gap-2 items-center">
+						<div className="h-full aspect-square">
+							<i class="fa-solid fa-list-ul"></i>
+						</div>
+						Daftar Pesanan
+					</div>
 				</div>
 				<div
-					className="text-[var(--white)] px-2 py-1 cursor-pointer hover:bg-[var(--mint)] transition-all ease-in rounded-sm"
+					className="text-(--bg-light) px-2 py-1 cursor-pointer hover:bg-(--accent-light) hover:text-(--text-muted) transition-all ease-in rounded-sm"
 					onClick={() => {
 						navigate("/orders/recap");
 					}}
 				>
-					Rekap Pesanan
+					<div className="flex gap-2 items-center">
+						<div className="h-full aspect-square">
+							<i class="fa-solid fa-book"></i>
+						</div>
+						Rekap Pesanan
+					</div>
 				</div>
 				{manager && (
-					<div
-						className="text-[var(--white)] px-2 py-1 cursor-pointer hover:bg-[var(--mint)] transition-all ease-in rounded-sm"
-						onClick={() => {
-							navigate("/items");
-						}}
-					>
-						Menu Items
+					<div>
+						<hr className="h-0.5 bg-(--accent-light) border-0 m-2"></hr>
+						<div
+							className="text-(--bg-light) px-2 py-1 cursor-pointer hover:bg-(--accent-light) hover:text-(--text-muted) transition-all ease-in rounded-sm"
+							onClick={() => {
+								navigate("/items");
+							}}
+						>
+							<div className="flex gap-2 items-center">
+								<div className="h-full aspect-square">
+									<i class="fa-solid fa-burger"></i>
+								</div>
+								Daftar Menu
+							</div>
+						</div>
 					</div>
 				)}
 			</div>
-			<div className="mt-2">
+			<div></div>
+			<div className="">
 				<p
-					className="text-red-200 px-2 py-1 cursor-pointer hover:text-red-400 hover:bg-[var(--mint)] transition-all ease-in rounded-sm"
+					className="text-(--bg-light) bg-(--alert-red) px-2 py-1 cursor-pointer hover:bg-(--alert-red-dark) transition-all ease-in rounded-sm"
 					onClick={() => {
 						navigate("/");
 					}}

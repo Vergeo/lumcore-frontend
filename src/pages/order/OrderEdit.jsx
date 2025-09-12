@@ -1,126 +1,124 @@
-import React, { act, useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Navbar from "../../components/Navbar";
+import { style } from "../../styles/style";
+import { useEffect, useState } from "react";
+import useAuth from "../../hooks/useAuth";
 
-const OrderEdit = () => {
+const orderEdit = () => {
 	const navigate = useNavigate();
 	const params = useParams();
 	const axiosPrivate = useAxiosPrivate();
-	const [items, setItems] = useState({});
+
+	const { auth } = useAuth();
+
+	const [isLoading, setIsLoading] = useState(true);
+	const [isSaving, setIsSaving] = useState(false);
+	const [isFinishing, setIsFinishing] = useState(false);
+	const [menuItems, setMenuItems] = useState([]);
 	const [categories, setCategories] = useState([]);
-	const [activeCategory, setActiveCategory] = useState("");
 
-	const [tempOrder, setTempOrder] = useState([]);
-	const [order, setOrder] = useState([]);
-	const [sale, setSale] = useState({});
-
-	const [number, setNumber] = useState(0);
-	const [tableNumber, setTableNumber] = useState(0);
+	const [currentCategory, setCurrentCategory] = useState({});
 	const [totalPrice, setTotalPrice] = useState(0);
 
-	const getSale = async () => {
-		try {
-			const res = await axiosPrivate.get(`/sales/${params.saleId}`);
-			setNumber(res.data.number);
-			setTableNumber(res.data.tableNumber);
-			setSale(res.data);
-		} catch (err) {
-			console.log(err);
-			navigate("/");
-		}
-	};
+	const [paymentMehods, setPaymentMethods] = useState([
+		"Cash",
+		"QRIS",
+		"Transfer",
+	]);
+	const [types, setTypes] = useState({
+		Offline: ["1", "2", "3", "4", "5", "6", "7", "8", "Bungkus"],
+		Online: ["Gojek", "Grab", "Shopee"],
+	});
+	const [id, setId] = useState();
+	const [number, setNumber] = useState(0);
+	const [selectedMethod, setSelectedMethod] = useState("");
+	const [selectedType, setSelectedType] = useState("Offline");
+	const [tableNumber, setTableNumber] = useState("");
 
-	const getItems = async () => {
-		try {
-			const res = await axiosPrivate.get(`/items`);
+	const [errorMessage, setErrorMessage] = useState("");
 
-			setTempOrder(
-				res.data.map((item) => {
+	const getMenuItems = async () => {
+		try {
+			setIsLoading(true);
+
+			const [resCategory, resItems, resOrder] = await Promise.all([
+				axiosPrivate.get("categories"),
+				axiosPrivate.get("items"),
+				axiosPrivate.get(`/sales/${params.saleId}`),
+			]);
+
+			setId(resOrder.data._id);
+			setNumber(resOrder.data.number);
+			setTableNumber(resOrder.data.tableNumber);
+			setSelectedType(resOrder.data.type);
+			setSelectedMethod(resOrder.data.payment);
+
+			setCategories(
+				resCategory.data.map((category) => {
+					const itemCount = resItems.data.filter(
+						(item) => item.category === category.name
+					).length;
+
+					return { ...category, quantity: itemCount };
+				})
+			);
+
+			setMenuItems(
+				resItems.data.map((item) => {
+					const orderedItem = resOrder.data.items.find(
+						(ordered) => ordered.name === item.name
+					);
+
 					return {
-						...item,
-						quantity: 0,
+						name: item.name,
+						category: item.category,
+						price: item.price,
+						quantity: orderedItem ? orderedItem.quantity : 0,
 					};
 				})
 			);
 
-			var result = {};
-			var temp = [];
+			setCurrentCategory(resCategory.data[0]);
 
-			res.data.forEach((item) => {
-				var found = false;
-				for (var cat in result) {
-					if (item.category == cat) {
-						found = true;
-						break;
-					}
-				}
-
-				if (!found) {
-					temp.push(item.category);
-					result[item.category] = [];
-				}
-			});
-
-			res.data.forEach((item) => {
-				result[item.category].push({
-					name: item.name,
-					price: item.price,
-				});
-			});
-			setItems(result);
-			setCategories(temp);
-			setActiveCategory(temp[0]);
-		} catch (err) {
-			console.log(err);
-			navigate("/");
+			setIsLoading(false);
+		} catch (error) {
+			setIsLoading(false);
+			if (error.status === 403) {
+				navigate("/");
+			}
 		}
 	};
 
 	useEffect(() => {
-		if (Object.keys(sale).length > 0 && tempOrder.length > 0) {
-			setOrder(
-				tempOrder.map((item) => {
-					var qty = 0;
-					sale.items.forEach((item2) => {
-						if (item.name == item2.name) {
-							qty = item2.quantity;
-						}
-					});
-					return {
-						...item,
-						quantity: qty,
-					};
-				})
-			);
-		}
-	}, [tempOrder, sale]);
+		getMenuItems();
+	}, []);
 
-	const addOrder = (itemToAdd) => {
-		setOrder(
-			order.map((item) =>
-				item.name === itemToAdd
-					? { ...item, quantity: item.quantity + 1 }
+	const addOrder = (itemToAdd, quantity) => {
+		setMenuItems(
+			menuItems.map((item) =>
+				item.name === itemToAdd && item.quantity + quantity >= 0
+					? { ...item, quantity: item.quantity + quantity }
 					: item
 			)
 		);
 	};
 
-	const removeOrder = (itemToRemove) => {
-		setOrder(
-			order.map((item) =>
-				item.name === itemToRemove && item.quantity > 0
-					? { ...item, quantity: item.quantity - 1 }
-					: item
-			)
-		);
-	};
+	useEffect(() => {
+		var total = 0;
+		menuItems.forEach((item) => {
+			total += item.quantity * item.price;
+		});
+		setTotalPrice(total);
+	}, [menuItems]);
 
 	const saveOrder = async () => {
 		try {
+			setErrorMessage("");
+			setIsSaving(true);
 			var orderedItem = [];
 
-			order.forEach((item) => {
+			menuItems.forEach((item) => {
 				if (item.quantity > 0) {
 					orderedItem.push({
 						name: item.name,
@@ -130,29 +128,37 @@ const OrderEdit = () => {
 				}
 			});
 
-			const newOrder = {
-				id: sale._id,
+			const orderObject = {
+				id,
 				number,
 				tableNumber,
+				cashier: auth.username,
+				status: "active",
+				type: selectedType,
+				payment: selectedMethod,
 				items: orderedItem,
-				cashierId: sale.cashierId,
-				status: sale.status,
-				date: sale.date,
+				date: new Date(),
 			};
 
-			const res = await axiosPrivate.patch(`/sales`, newOrder);
+			const res = await axiosPrivate.patch("sales", orderObject);
+			setIsSaving(false);
 			navigate("/orders");
-		} catch (err) {
-			console.log(err);
-			navigate("/");
+		} catch (error) {
+			setErrorMessage(error.response.data.message);
+			setIsSaving(false);
+			if (error.status === 403) {
+				navigate("/");
+			}
 		}
 	};
 
 	const finishOrder = async () => {
 		try {
+			setErrorMessage("");
+			setIsFinishing(true);
 			var orderedItem = [];
 
-			order.forEach((item) => {
+			menuItems.forEach((item) => {
 				if (item.quantity > 0) {
 					orderedItem.push({
 						name: item.name,
@@ -162,192 +168,415 @@ const OrderEdit = () => {
 				}
 			});
 
-			const newOrder = {
-				id: sale._id,
-				number: sale.number,
-				tableNumber: sale.tableNumber,
-				items: orderedItem,
-				cashierId: sale.cashierId,
+			const orderObject = {
+				id,
+				number,
+				tableNumber,
+				cashier: auth.username,
 				status: "finished",
-				date: sale.date,
+				type: selectedType,
+				payment: selectedMethod,
+				items: orderedItem,
+				date: new Date(),
 			};
 
-			const res = await axiosPrivate.patch(`/sales`, newOrder);
+
+			const res = await axiosPrivate.patch("sales", orderObject);
+			setIsFinishing(false);
 			navigate("/orders");
-		} catch (err) {
-			console.log(err);
-			navigate("/");
+		} catch (error) {
+			setErrorMessage(error.response.data.message);
+			setIsFinishing(false);
+			if (error.status === 403) {
+				navigate("/");
+			}
 		}
 	};
 
-	useEffect(() => {
-		getItems();
-		getSale();
-	}, []);
-
-	useEffect(() => {
-		var total = 0;
-		order.forEach((item) => {
-			if (item.quantity > 0) {
-				total += item.price * item.quantity;
-			}
-		});
-		setTotalPrice(total);
-	}, [order]);
-
 	return (
-		<div className="w-screen min-h-screen bg-[var(--white)] flex">
+		<div className="w-screen min-h-screen bg-(--bg-dark) flex">
 			<Navbar />
-			<div className="w-full flex py-6 px-3 bg-(--white)">
-				<div className="flex flex-col bg-(--white) w-2/3">
-					<div className="text-2xl font-bold text-(--dark-mint)">
-						Edit Pesanan
+			<div className="w-full flex p-6 gap-6">
+				<div className="w-2/3 gap-5 flex flex-col">
+					<h1 className={style.h1}>Edit Pesanan</h1>
+
+					{isLoading && (
+						<div className="flex justify-start items-center">
+							<i className="fa-solid fa-cog fa-spin mr-2"></i>
+							Mengambil Data Menu
+						</div>
+					)}
+					{!isLoading && (
+						<div className="w-full flex flex-col gap-6">
+							<div className="w-full mb-2 grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-3">
+								{categories.map((category) => {
+									return currentCategory.name ===
+										category.name ? (
+										<div
+											key={category.name}
+											className="flex p-2 gap-2 grow bg-(--accent) text-(--bg-light) shadow-sm rounded-sm transition-all ease-in"
+										>
+											<div className="transition-all ease-in h-full aspect-square flex justify-center items-center bg-(--bg) rounded-sm">
+												<i
+													className={
+														"text-(--accent) transition-all ease-in fa-solid " +
+														category.icon
+													}
+												></i>
+											</div>
+											<div>
+												<div className="font-bold">
+													{category.name}
+												</div>
+												<div
+													className={
+														"text-sm text-(--bg-dark)"
+													}
+												>
+													{category.quantity} Barang
+												</div>
+											</div>
+										</div>
+									) : (
+										<div
+											key={category.name}
+											className="group flex p-2 gap-2 grow bg-(--bg-light) shadow-sm rounded-sm cursor-pointer hover:bg-(--accent-light) transition-all ease-in"
+											onClick={() => {
+												setCurrentCategory(category);
+											}}
+										>
+											<div className="group-hover:bg-(--bg-dark) transition-all ease-in h-full aspect-square flex justify-center items-center bg-(--bg) rounded-sm">
+												<i
+													className={
+														"group-hover:text-(--accent) transition-all ease-in fa-solid " +
+														category.icon
+													}
+												></i>
+											</div>
+											<div>
+												<div className="font-bold">
+													{category.name}
+												</div>
+												<div
+													className={
+														style.p_muted +
+														"text-sm"
+													}
+												>
+													{category.quantity} Barang
+												</div>
+											</div>
+										</div>
+									);
+								})}
+							</div>
+							<div className="grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-3">
+								{menuItems.map((item) => {
+									if (
+										item.category === currentCategory.name
+									) {
+										return (
+											<div
+												key={item.name}
+												className={
+													style.card +
+													"bg-(--bg-light) p-2 flex-row justify-start gap-2"
+												}
+											>
+												<div className="h-full aspect-square bg-(--bg) flex justify-center items-center">
+													<i
+														className={
+															"fa-2xl fa-solid " +
+															currentCategory.icon
+														}
+													></i>
+												</div>
+												<div>
+													<div className="text-lg text">
+														{item.name}
+													</div>
+													<div className="w-fit flex justify-center gap-3 items-center bg-(--bg) rounded-sm p-1">
+														<div
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xl cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
+															onClick={() => {
+																addOrder(
+																	item.name,
+																	-10
+																);
+															}}
+														>
+															-
+														</div>
+														<div
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-lg cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
+															onClick={() => {
+																addOrder(
+																	item.name,
+																	-1
+																);
+															}}
+														>
+															-
+														</div>
+														<div className="text-lg">
+															{item.quantity}
+														</div>
+														<div
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-lg cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
+															onClick={() => {
+																addOrder(
+																	item.name,
+																	1
+																);
+															}}
+														>
+															+
+														</div>
+														<div
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xl cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
+															onClick={() => {
+																addOrder(
+																	item.name,
+																	10
+																);
+															}}
+														>
+															+
+														</div>
+													</div>
+												</div>
+											</div>
+										);
+									}
+								})}
+							</div>
+						</div>
+					)}
+				</div>
+				<div
+					className={
+						"w-1/3 bg-(--bg-light) gap-2 justify-start p-3 items-start" +
+						style.card
+					}
+				>
+					<div className="w-full flex flex-col gap-2">
+						{errorMessage && (
+							<div className={style.error}>{errorMessage}</div>
+						)}
+						<h3 className={style.h3}>Informasi Pesanan</h3>
+						<div className="flex gap-2 items-center">
+							<label htmlFor="number">No. Nota</label>
+							<input
+								type="number"
+								name=""
+								id="number"
+								onChange={(e) => {
+									setNumber(e.target.value);
+								}}
+								value={number}
+								autoComplete="off"
+								className={style.text_input + "w-fit"}
+							/>
+						</div>
+						<div className="flex gap-2 items-center">
+							<label htmlFor="tableNumber">No. Meja</label>
+							<input
+								type="text"
+								name=""
+								id="tableNumber"
+								onChange={(e) => {
+									setTableNumber(e.target.value);
+								}}
+								value={tableNumber}
+								autoComplete="off"
+								className={style.text_input}
+							/>
+						</div>
 					</div>
-					<div className="flex bg-(--dark-mint) p-2 gap-2 wrap rounded-sm">
-						{categories.map((category) => {
-							return (
-								<div
-									key={category}
-									className="px-3 py-1 bg-(--light-mint) cursor-pointer hover:bg-(--mint) rounded-sm transition-all ease-in"
-								>
-									<p
+					<div className="w-full flex flex-col">
+						<div className="grid grid-cols-[repeat(auto-fit,minmax(5rem,1fr))] gap-2">
+							{Object.keys(types).map((type) => {
+								return (
+									<div key={type}>
+										<label
+											// htmlFor={num}
+											className={
+												selectedType === type
+													? style.radio_checked
+													: style.radio
+											}
+										>
+											<input
+												type="radio"
+												name="type"
+												value={type}
+												className="hidden"
+												checked={tableNumber === type}
+												onChange={(e) =>
+													setSelectedType(
+														e.target.value
+													)
+												}
+											/>
+											{type}
+										</label>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+					<div className="w-full flex flex-col">
+						<div className="grid grid-cols-[repeat(auto-fit,minmax(5rem,1fr))] gap-2">
+							{types[selectedType].map((num) => {
+								return (
+									<div key={num}>
+										<label
+											// htmlFor={num}
+											className={
+												tableNumber === num
+													? style.radio_checked
+													: style.radio
+											}
+										>
+											<input
+												type="radio"
+												name="tableNumber"
+												value={num}
+												className="hidden"
+												checked={tableNumber === num}
+												onChange={(e) =>
+													setTableNumber(
+														e.target.value
+													)
+												}
+											/>
+											{num}
+										</label>
+									</div>
+								);
+							})}
+						</div>
+					</div>
+					<hr className="bg-(--bg) h-0.5 border-0 w-full rounded-lg"></hr>
+					<div className="w-full flex flex-col gap-2">
+						<h3 className={style.h3}>Pesanan</h3>
+						<table className="w-full">
+							<thead>
+								<tr className="bg-(--accent) text-(--bg-light)">
+									<th className="rounded-tl-sm p-1">
+										Banyak
+									</th>
+									<th className="border-l-1 border-(--bg-light) p-1">
+										Item
+									</th>
+									<th className="border-l-1 border-(--bg-light) rounded-tr-sm p-1">
+										Harga
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								{menuItems.map((item) => {
+									if (item.quantity > 0) {
+										return (
+											<tr
+												key={item.name}
+												className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
+											>
+												<td className="p-1">
+													{item.quantity}
+												</td>
+												<td className="border-l-1 border-(--bg-light) p-1">
+													{item.name}
+												</td>
+												<td className="border-l-1 border-(--bg-light) p-1">
+													{item.price * item.quantity}
+												</td>
+											</tr>
+										);
+									}
+								})}
+								<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+									<td
+										colSpan={2}
+										className="text-center font-bold rounded-bl-md p-1"
+									>
+										Total
+									</td>
+									<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-md font-bold">
+										{totalPrice}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+						<div
+							className={
+								!isSaving && !isFinishing
+									? style.button + "w-fit"
+									: style.button_muted + "w-fit"
+							}
+							onClick={() => {
+								!isSaving && !isFinishing
+									? saveOrder()
+									: () => {};
+							}}
+						>
+							{!isSaving ? (
+								"Simpan Pesanan"
+							) : (
+								<div className="flex justify-center items-center">
+									<i className="fa-solid fa-cog fa-spin mr-2"></i>
+									Menyimpan Pesanan
+								</div>
+							)}
+						</div>
+					</div>
+
+					<hr className="bg-(--bg) h-0.5 border-0 w-full rounded-lg"></hr>
+					<div className="w-full flex flex-col gap-2">
+						<h3 className={style.h3}>Pembayaran</h3>
+						<div className="w-full mb-2 grid grid-cols-[repeat(auto-fit,minmax(4rem,1fr))] gap-3">
+							{paymentMehods.map((method) => {
+								return selectedMethod === method ? (
+									<div
+										key={method}
+										className="flex p-2 gap-2 grow bg-(--accent) text-(--bg-light) shadow-sm rounded-sm transition-all ease-in justify-center"
+									>
+										{method}
+									</div>
+								) : (
+									<div
+										key={method}
+										className="group flex p-2 gap-2 grow bg-(--bg) shadow-sm rounded-sm cursor-pointer hover:bg-(--accent-light) transition-all ease-in justify-center"
 										onClick={() => {
-											setActiveCategory(category);
+											setSelectedMethod(method);
 										}}
 									>
-										{category}
-									</p>
-								</div>
-							);
-						})}
-					</div>
-					<div className="flex gap-3 flex-wrap mt-3 justify-">
-						{items[activeCategory]?.map((item) => {
-							return (
-								<div
-									key={item.name}
-									className="w-40 h-min-20 bg-(--mint) flex flex-col gap-2 items-center p-3 text-(--white) text-center rounded-sm"
-								>
-									{item.name}
-									<div className="flex gap-2">
-										<div
-											className="w-10 text-2xl h-7 rounded-sm bg-green-200 flex items-center justify-center text-(--dark-mint) cursor-pointer hover:bg-green-400 transition-all ease-in"
-											onClick={() => {
-												addOrder(item.name);
-											}}
-										>
-											+
-										</div>
-										<div>{order[item.name]?.quantity}</div>
-										<div
-											className="w-10 text-2xl h-7 rounded-sm bg-red-200  flex items-center justify-center text-(--dark-mint) cursor-pointer hover:bg-red-400 transition-all ease-in"
-											onClick={() => {
-												removeOrder(item.name);
-											}}
-										>
-											-
-										</div>
+										{method}
 									</div>
-								</div>
-							);
-						})}
-					</div>
-				</div>
-				<div className="flex flex-col bg-(--light-mint) w-1/3 ml-3 p-2 gap-2 rounded-sm shadow-md">
-					<div>
-						<label htmlFor="number">No. Nota </label>
-						<input
-							type="text"
-							name=""
-							id="number"
-							onChange={(e) => {
-								setNumber(e.target.value);
-							}}
-							value={number}
-							className="px-2 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in  rounded-sm"
-							autoComplete="off"
-						/>
-					</div>
-					<div>
-						<label htmlFor="tableNumber">No. Meja </label>
-						<input
-							type="text"
-							name=""
-							id="tableNumber"
-							onChange={(e) => {
-								setTableNumber(e.target.value);
-							}}
-							value={tableNumber}
-							className="px-2 pt-1 bg-gray-200 outline-none border-b-4 border-gray-200 focus:border-[var(--dark-mint)] transition-all ease-in  rounded-sm"
-							autoComplete="off"
-						/>
-					</div>
-					<table>
-						<thead className="bg-(--mint) text-(--white)">
-							<tr>
-								<th className="text-center rounded-tl-sm">
-									Qty
-								</th>
-								<th className="text-center border-l-2 border-(--light-mint)">
-									Item
-								</th>
-								<th className="text-center rounded-tr-sm border-l-2 border-(--light-mint)">
-									Price
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{order?.map((item) => {
-								if (item.quantity > 0) {
-									return (
-										<tr key={item.name}>
-											<td className="border-t-2 border-(--light-mint) bg-gray-200 text-center">
-												{item.quantity}
-											</td>
-											<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center">
-												{item.name}
-											</td>
-											<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center">
-												{item.price * item.quantity}
-											</td>
-										</tr>
-									);
-								}
+								);
 							})}
-						</tbody>
-						<tfoot>
-							<tr>
-								<td
-									colSpan={2}
-									className="bg-gray-300 rounded-bl-sm border-t-2 border-(--light-mint) text-center font-bold"
-								>
-									Total
-								</td>
-								<td className="bg-gray-300 rounded-bl-sm border-t-2 border-l-2 border-(--light-mint) text-center rounded-br-md font-bold">
-									{totalPrice}
-								</td>
-							</tr>
-						</tfoot>
-					</table>
-
-					<div className="flex gap-2">
-						<div
-							className="w-fit bg-(--mint) text-(--white) px-3 py-1 cursor-pointer hover:bg-(--dark-mint) rounded-sm transition-all ease-in"
-							onClick={() => {
-								saveOrder();
-							}}
-						>
-							Simpan
 						</div>
-
-						<div
-							className="w-fit bg-(--white) px-3 py-1 cursor-pointer hover:bg-gray-200 rounded-sm transition-all ease-in"
-							onClick={() => {
-								finishOrder();
-							}}
-						>
-							Selesai
-						</div>
+					</div>
+					<div
+						className={
+							!isSaving && !isFinishing
+								? style.button
+								: style.button_muted
+						}
+						onClick={() => {
+							!isSaving && !isFinishing
+								? finishOrder()
+								: () => {};
+						}}
+					>
+						{!isFinishing ? (
+							"Selesaikan Pesanan"
+						) : (
+							<div className="flex justify-center items-center">
+								<i className="fa-solid fa-cog fa-spin mr-2"></i>
+								Menyelesaikan Pesanan
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
@@ -355,4 +584,4 @@ const OrderEdit = () => {
 	);
 };
 
-export default OrderEdit;
+export default orderEdit;
