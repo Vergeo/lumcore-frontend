@@ -280,7 +280,7 @@ const orderNew = () => {
 													</div>
 													<div className="w-fit flex justify-center gap-3 items-center bg-(--bg) rounded-sm p-1">
 														<div
-															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xl cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-md cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
 															onClick={() => {
 																addOrder(
 																	item.name,
@@ -288,10 +288,10 @@ const orderNew = () => {
 																);
 															}}
 														>
-															-
+															<i class="fa-solid fa-minus"></i>
 														</div>
 														<div
-															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-lg cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xs cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
 															onClick={() => {
 																addOrder(
 																	item.name,
@@ -299,13 +299,13 @@ const orderNew = () => {
 																);
 															}}
 														>
-															-
+															<i class="fa-solid fa-minus"></i>
 														</div>
 														<div className="text-lg">
 															{item.quantity}
 														</div>
 														<div
-															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-lg cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xs cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
 															onClick={() => {
 																addOrder(
 																	item.name,
@@ -313,10 +313,10 @@ const orderNew = () => {
 																);
 															}}
 														>
-															+
+															<i class="fa-solid fa-plus"></i>
 														</div>
 														<div
-															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xl cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
+															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-md cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
 															onClick={() => {
 																addOrder(
 																	item.name,
@@ -324,7 +324,7 @@ const orderNew = () => {
 																);
 															}}
 														>
-															+
+															<i class="fa-solid fa-plus"></i>
 														</div>
 													</div>
 												</div>
@@ -445,16 +445,24 @@ const orderNew = () => {
 						<h3 className={style.h3}>Pesanan</h3>
 						<table className="w-full">
 							<thead>
-								<tr className="bg-(--accent) text-(--bg-light)">
+								<tr className="bg-(--bg-dark) text-(--text)">
 									<th className="rounded-tl-sm p-1">
 										Banyak
 									</th>
-									<th className="border-l-1 border-(--bg-light) p-1">
+									<th
+										className={
+											"border-l-1 border-(--bg-light) p-1" +
+												selectedType !==
+												"Online" && "rounded-tr-sm"
+										}
+									>
 										Item
 									</th>
-									<th className="border-l-1 border-(--bg-light) rounded-tr-sm p-1">
-										Harga
-									</th>
+									{selectedType !== "Online" && (
+										<th className="border-l-1 border-(--bg-light) rounded-tr-sm p-1">
+											Harga
+										</th>
+									)}
 								</tr>
 							</thead>
 							<tbody>
@@ -471,24 +479,36 @@ const orderNew = () => {
 												<td className="border-l-1 border-(--bg-light) p-1">
 													{item.name}
 												</td>
-												<td className="border-l-1 border-(--bg-light) p-1">
-													{item.price * item.quantity}
-												</td>
+												{selectedType !== "Online" && (
+													<td className="border-l-1 border-(--bg-light) p-1">
+														{item.price *
+															item.quantity}
+													</td>
+												)}
 											</tr>
 										);
 									}
 								})}
-								<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
-									<td
-										colSpan={2}
-										className="text-center font-bold rounded-bl-md p-1"
-									>
-										Total
-									</td>
-									<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-md font-bold">
-										{totalPrice}
-									</td>
-								</tr>
+								{selectedType !== "Online" ? (
+									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+										<td
+											colSpan={2}
+											className="text-center font-bold rounded-bl-md p-1"
+										>
+											Total
+										</td>
+										<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-md font-bold">
+											{totalPrice}
+										</td>
+									</tr>
+								) : (
+									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+										<td
+											colSpan={2}
+											className="text-center font-bold rounded-bl-md p-1 rounded-br-md"
+										></td>
+									</tr>
+								)}
 							</tbody>
 						</table>
 						<div

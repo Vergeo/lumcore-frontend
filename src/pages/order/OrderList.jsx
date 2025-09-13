@@ -1,69 +1,82 @@
-import React, { act, useEffect, useState } from "react";
-import Navbar from "../../components/Navbar";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Order from "./Order";
+import Navbar from "../../components/Navbar";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { style } from "../../styles/style";
+import Order from "./Order";
 
 const OrderList = () => {
 	const navigate = useNavigate();
 	const axiosPrivate = useAxiosPrivate();
 
-	const [activeSales, setActiveSales] = useState([]);
-	const [finishedSales, setFinishedSales] = useState([]);
+	const [activeOrders, setActiveOrders] = useState([]);
+	const [finishedOrders, setFinishedOrders] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
-	const fetchActiveSales = async () => {
+	const fetchOrders = async () => {
 		try {
+			setIsLoading(true);
+			const res = await axiosPrivate.get("sales");
+
 			const today = new Date();
 			today.setHours(0, 0, 0, 0);
-			const res = await axiosPrivate.get(`/sales`);
-			var tmp = [],
-				tmp2 = [];
-			res.data.forEach((sale) => {
-				const date2 = new Date(sale.date);
-				date2.setHours(0, 0, 0, 0);
-				if (today.getTime() === date2.getTime()) {
-					if (sale.status == "active") {
-						tmp.push(sale);
+
+			res.data.forEach((order) => {
+				const orderDate = new Date(order.date);
+				orderDate.setHours(0, 0, 0, 0);
+
+				if (today.getTime() === orderDate.getTime()) {
+					if (order.status === "active") {
+						setActiveOrders((prev) => [...prev, order]);
 					} else {
-						tmp2.push(sale);
+						setFinishedOrders((prev) => [...prev, order]);
 					}
 				}
 			});
-			setActiveSales(tmp);
-			setFinishedSales(tmp2);
-		} catch (err) {
-			console.log(err);
-			navigate("/");
+			setIsLoading(false);
+		} catch (error) {
+			setIsLoading(false);
+			if (error.status === 403) {
+				navigate("/");
+			}
 		}
 	};
+
 	useEffect(() => {
-		fetchActiveSales();
+		fetchOrders();
 	}, []);
 
 	return (
-		<div className="w-screen min-h-screen bg-[var(--white)] flex">
+		<div className="w-screen min-h-screen bg-(--bg-dark) flex">
 			<Navbar />
-			<div className="w-full py-6 px-3">
-				<div className="text-2xl font-bold text-(--dark-mint) mt">
-					Pesanan Aktif
-				</div>
+			<div className="w-full flex flex-col gap-6 p-6">
+				<h1 className={style.h1}>Daftar Pesanan Aktif</h1>
+				{isLoading ? (
+					<div className="flex justify-start items-center">
+						<i className="fa-solid fa-cog fa-spin mr-2"></i>
+						Mengambil Data Pesanan
+					</div>
+				) : (
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-3">
+						{activeOrders.map((order) => {
+							return <Order order={order} key={order._id} />;
+						})}
+					</div>
+				)}
 
-				<div className="flex gap-2 flex-wrap">
-					{activeSales.map((sale) => {
-						return <Order sale={sale} key={sale._id} />;
-					})}
-				</div>
-
-				<div className="text-2xl font-bold text-(--dark-mint) mt-2">
-					Pesanan Selesai
-				</div>
-
-				<div className="flex gap-2 flex-wrap">
-					{finishedSales.map((sale) => {
-						var total = 0;
-						return <Order sale={sale} key={sale._id} />;
-					})}
-				</div>
+				<h1 className={style.h1}>Daftar Pesanan Selesai</h1>
+				{isLoading ? (
+					<div className="flex justify-start items-center">
+						<i className="fa-solid fa-cog fa-spin mr-2"></i>
+						Mengambil Data Pesanan
+					</div>
+				) : (
+					<div className="grid grid-cols-[repeat(auto-fit,minmax(20rem,1fr))] gap-3">
+						{finishedOrders.map((order) => {
+							return <Order order={order} key={order._id} />;
+						})}
+					</div>
+				)}
 			</div>
 		</div>
 	);

@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { style } from "../../styles/style";
+import useAuth from "../../hooks/useAuth";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
-const Order = ({ sale }) => {
+const Order = ({ order }) => {
 	const navigate = useNavigate();
+	const { auth } = useAuth();
+	const [manager, setManager] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [isDeleted, setIsDeleted] = useState(false);
+	const axiosPrivate = useAxiosPrivate();
 
-	const printReceipt = (sale2, total) => {
-		let elementToPrint = document.getElementById(sale2._id);
+	const printReceipt = (order2, total) => {
+		let elementToPrint = document.getElementById(order2._id);
 		let printContent = elementToPrint.innerHTML;
 
-		const date = new Date(sale2.date);
+		const date = new Date(order2.date);
 		const dateHTML = `Date: ${date.toLocaleString("en-GB").split(",")[0]} ${
 			date.toLocaleString("en-GB").split(",")[1]
 		}`;
@@ -52,7 +60,7 @@ const Order = ({ sale }) => {
                     <h3>Mie Celor 99 Poligon</h3>
                     <h4>Jl. Amanzi Water Park</h4
                     ><h4>Citra Grand City</h4>
-                    <p>No. Nota: ${sale.number}</p>
+                    <p>No. Nota: ${order.number}</p>
                     <p>${dateHTML}</p>
                     <hr style="width: 100%" />
                     <table>
@@ -74,53 +82,6 @@ const Order = ({ sale }) => {
             </body>
         </html>
         `);
-
-		// printWindow.document.write(`
-		//     <!DOCTYPE html>
-		//     <html>
-		//     <head>
-		//         <meta charset="utf-8"/>
-		//         <title>Receipt</title>
-		//         <style>
-		//             .container {
-		//                 width: 100%;
-		//                 display: flex;
-		//                 flex-direction: column;
-		//                 align-items: center;
-		//                 padding: 10px;
-		//             }
-		//             .price {
-		//                 text-align: right;
-		//             }
-		//             table {
-		//                 width: 100%;
-		//             }
-		//         </style>
-		//     </head>
-		//     <body>
-		//         <div class="container">
-		//             <h3>Mie Celor 99 Poligon</h3>
-		//             <h4>Jl. Amanzi Water Park</h4>
-		//             <h4>Citra Grand City</h4>
-		//             <p>No. Nota: ${sale2.number}</p>
-		//             <p>${dateHTML}</p>
-		//             <hr style="width: 100%"/>
-		//             <table>
-		//                 ${printContent}
-		//                 <tfoot>
-		//                     <tr><td colspan="3"><hr/></td></tr>
-		//                     <tr>
-		//                         <td colspan="2" style="font-weight: bold">Total</td>
-		//                         <td colspan="2" style="font-weight: bold" class="price">${total}</td>
-		//                     </tr>
-		//                 </tfoot>
-		//             </table>
-		//             <p>Terima Kasih</p>
-		//         </div>
-		//     </body>
-		//     </html>
-		// `);
-
 		printWindow.document.close();
 
 		// Give the browser a moment to render, then print
@@ -128,91 +89,162 @@ const Order = ({ sale }) => {
 			printWindow.print();
 			printWindow.close();
 		};
-		// printWindow.document.write(
-		// 	"<style>.container {width: 100%;display: flex;flex-direction: column;align-items: center;padding: 10px;} .price{text-align:right}table{width:100%}</style>"
-		// );
-		// printWindow.document.write(
-		// 	`<div class='container'><h3>Mie Celor 99 Poligon</h3><h4>Jl. Amanzi Water Park</h4><h4>Citra Grand City</h4><p>No. Nota: ${sale.number}</p><p>${dateHTML}</p><hr style='width: 100%'/><table>${printContent}<tfoot><tr><td colspan="3"><hr/></td</tr><tr><td colspan='2' style='font-weight: bold'>Total</td><td colspan='2' style='font-weight: bold' class='price'>${total}</td></tr></tfoot></table><p>Terima Kasih</p></div>`
-		// );
-		// printWindow.document.close();
-		// printWindow.print();
-		// printWindow.close();
 	};
 
 	var total = 0;
 
+	useEffect(() => {
+		setManager(auth?.roles?.includes("Manager"));
+	}, []);
+
+	const deleteOrder = async (id) => {
+		try {
+			setIsDeleting(true);
+			const res = await axiosPrivate({
+				method: "DELETE",
+				url: "sales",
+				data: { id },
+			});
+			setIsDeleting(false);
+			setIsDeleted(true);
+			navigate("/orders");
+		} catch (error) {
+			setIsDeleting(false);
+			if (error.code === 403) {
+				navigate("/");
+			}
+		}
+	};
+
 	return (
 		<div
-			key={sale._id}
-			className="w-80 min-h-50 bg-(--light-mint) p-2 rounded-sm shadow-sm"
+			key={order._id}
+			className={
+				style.card +
+				"min-h-50 bg-(--bg-light) p-2 items-start justify-start hover:shadow-lg hover:scale-102 transition-all ease-out"
+			}
 		>
-			<p className="text-xl font-bold text-center">{sale.number}</p>
+			<div className="w-full flex justify-center">
+				<h2
+					className={
+						style.h2 +
+						"bg-(--accent) text-(--bg-light) py-1 px-3 rounded-sm shadow-sm"
+					}
+				>
+					{order.number}
+				</h2>
+			</div>
 			<p>
-				<b>Meja:</b> {sale.tableNumber}
+				<b>Tipe:</b> {order.type}
+			</p>
+			<p>
+				<b>Meja:</b> {order.tableNumber}
+			</p>
+			<p>
+				<b>Kasir:</b> {order.cashier}
 			</p>
 			<table className="w-full">
-				<thead className="bg-(--mint) text-white">
-					<tr>
-						<th className="rounded-tl-sm">Byk</th>
-						<th className="border-(--light-mint) border-l-2">
+				<thead>
+					<tr className="bg-(--bg-dark) text-(--text)">
+						<th className="rounded-tl-sm p-1">Byk</th>
+						<th
+							className={
+								"border-l-1 border-(--bg-light) p-1" +
+									order.type !==
+									"Online" && "rounded-tr-sm"
+							}
+						>
 							Item
 						</th>
-						<th className="border-(--light-mint) border-l-2 rounded-tr-sm">
-							Harga
-						</th>
+						{order.type !== "Online" && (
+							<th className="border-(--bg-light) border-l-1 p-1 rounded-tr-sm">
+								Harga
+							</th>
+						)}
 					</tr>
 				</thead>
-				<tbody id={sale._id}>
-					{sale.items.map((item) => {
+				<tbody id={order._id}>
+					{order.items.map((item) => {
 						total += item.price * item.quantity;
 						return (
 							<tr key={item._id}>
-								<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center">
+								<td className="border-t-1 border-(--bg-light) bg-(--bg) text-center">
 									{item.quantity}
 								</td>
-								<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center">
+								<td className="border-t-1 border-l-1 border-(--bg-light) bg-(--bg) text-center">
 									{item.name}
 								</td>
-								<td className="border-t-2 border-l-2 border-(--light-mint) bg-gray-200 text-center price">
-									{item.price * item.quantity}
-								</td>
+								{order.type !== "Online" && (
+									<td className="border-t-1 border-l-1 border-(--bg-light) bg-(--bg) text-center price">
+										{item.price * item.quantity}
+									</td>
+								)}
 							</tr>
 						);
 					})}
+					{order.type !== "Online" ? (
+						<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+							<td
+								colSpan={2}
+								className="text-center font-bold rounded-bl-md p-1"
+							>
+								Total
+							</td>
+							<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-md font-bold">
+								{total}
+							</td>
+						</tr>
+					) : (
+						<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+							<td
+								colSpan={2}
+								className="text-center font-bold rounded-bl-md p-1 rounded-br-md"
+							></td>
+						</tr>
+					)}
 				</tbody>
-				<tfoot>
-					<tr>
-						<td
-							colSpan={2}
-							className="bg-gray-300 rounded-bl-sm border-t-2 border-(--light-mint) text-center font-bold"
-						>
-							Total
-						</td>
-						<td className="bg-gray-300 rounded-bl-sm border-t-2 border-l-2 border-(--light-mint) text-center rounded-br-md font-bold">
-							{total}
-						</td>
-					</tr>
-				</tfoot>
 			</table>
 			<div className="mt-2 flex gap-2">
-				{sale.status === "active" && (
+				{order.status === "active" && (
 					<div
 						onClick={() => {
-							navigate(`/orders/edit/${sale._id}`);
+							navigate(`/orders/edit/${order._id}`);
 						}}
-						className="w-fit bg-(--mint) text-(--white) px-3 py-1 cursor-pointer hover:bg-(--dark-mint) rounded-sm transition-all ease-in"
+						className={style.button}
 					>
-						Ubah
+						<i class="fa-solid fa-pen-to-square"></i>
 					</div>
 				)}
 				<div
 					onClick={() => {
-						printReceipt(sale, total);
+						printReceipt(order, total);
 					}}
-					className="w-fit bg-(--mint) text-(--white) px-3 py-1 cursor-pointer hover:bg-(--dark-mint) rounded-sm transition-all ease-in"
+					className={
+						style.button +
+						"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
+					}
 				>
-					Print
+					<i class="fa-solid fa-print"></i>
 				</div>
+				{manager && (
+					<div
+						onClick={() => {
+							!isDeleted ? deleteOrder(order._id) : () => {};
+						}}
+						className={
+							style.button +
+							"bg-(--alert-red) hover:bg-(--alert-red-dark) text-(--bg-light)"
+						}
+					>
+						{isDeleted ? (
+							<i class="fa-solid fa-check"></i>
+						) : isDeleting ? (
+							<i className="fa-solid fa-cog fa-spin"></i>
+						) : (
+							<i class="fa-solid fa-trash"></i>
+						)}
+					</div>
+				)}
 			</div>
 		</div>
 	);

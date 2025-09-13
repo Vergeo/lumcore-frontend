@@ -25,7 +25,7 @@ const Navbar = () => {
 				>
 					<div className="flex gap-2 items-center">
 						<div className="h-full aspect-square">
-							<i class="fa-solid fa-plus"></i>
+							<i className="fa-solid fa-plus"></i>
 						</div>
 						Pesanan Baru
 					</div>
@@ -38,7 +38,7 @@ const Navbar = () => {
 				>
 					<div className="flex gap-2 items-center">
 						<div className="h-full aspect-square">
-							<i class="fa-solid fa-list-ul"></i>
+							<i className="fa-solid fa-list-ul"></i>
 						</div>
 						Daftar Pesanan
 					</div>
@@ -51,9 +51,9 @@ const Navbar = () => {
 				>
 					<div className="flex gap-2 items-center">
 						<div className="h-full aspect-square">
-							<i class="fa-solid fa-book"></i>
+							<i className="fa-solid fa-book"></i>
 						</div>
-						Rekap Pesanan
+						Rekap Penjualan
 					</div>
 				</div>
 				{manager && (
@@ -67,7 +67,7 @@ const Navbar = () => {
 						>
 							<div className="flex gap-2 items-center">
 								<div className="h-full aspect-square">
-									<i class="fa-solid fa-burger"></i>
+									<i className="fa-solid fa-burger"></i>
 								</div>
 								Daftar Menu
 							</div>
