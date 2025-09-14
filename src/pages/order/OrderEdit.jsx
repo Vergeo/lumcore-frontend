@@ -48,6 +48,10 @@ const orderEdit = () => {
 				axiosPrivate.get(`/sales/${params.saleId}`),
 			]);
 
+			resItems.data.sort(function (a, b) {
+				return a.index - b.index;
+			});
+
 			setId(resOrder.data._id);
 			setNumber(resOrder.data.number);
 			setTableNumber(resOrder.data.tableNumber);

@@ -45,6 +45,11 @@ const orderNew = () => {
 				axiosPrivate.get("items"),
 			]);
 
+			
+			resItems.data.sort(function (a, b) {
+				return a.index - b.index;
+			});
+
 			setCategories(
 				resCategory.data.map((category) => {
 					const itemCount = resItems.data.filter(

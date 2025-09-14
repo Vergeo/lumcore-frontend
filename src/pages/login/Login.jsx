@@ -91,8 +91,14 @@ const Login = () => {
 						</div>
 					)}
 					<div className="flex flex-col items-center">
-						<div
-							onClick={!isVerifying ? handleLogin : () => {}}
+						<button
+							onClick={
+								!isVerifying
+									? handleLogin
+									: (e) => {
+											e.preventDefault();
+									  }
+							}
 							className={
 								isVerifying ? style.button_muted : style.button
 							}
@@ -105,7 +111,7 @@ const Login = () => {
 									Memverifikasi
 								</div>
 							)}
-						</div>
+						</button>
 					</div>
 				</form>
 			</div>

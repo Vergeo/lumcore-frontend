@@ -56,7 +56,7 @@ const Order = ({ order }) => {
                 </style>
             </head>
             <body>
-                <div class="container">
+                <div className="container">
                     <h3>Mie Celor 99 Poligon</h3>
                     <h4>Jl. Amanzi Water Park</h4
                     ><h4>Citra Grand City</h4>
@@ -73,7 +73,7 @@ const Order = ({ order }) => {
                             </tr>
                             <tr>
                                 <td colspan="2" style="font-weight: bold">Total</td>
-                                <td class="price" style="font-weight: bold">${total}</td>
+                                <td className="price" style="font-weight: bold">${total}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -212,7 +212,7 @@ const Order = ({ order }) => {
 						}}
 						className={style.button}
 					>
-						<i class="fa-solid fa-pen-to-square"></i>
+						<i className="fa-solid fa-pen-to-square"></i>
 					</div>
 				)}
 				<div
@@ -224,7 +224,7 @@ const Order = ({ order }) => {
 						"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
 					}
 				>
-					<i class="fa-solid fa-print"></i>
+					<i className="fa-solid fa-print"></i>
 				</div>
 				{manager && (
 					<div
@@ -237,11 +237,11 @@ const Order = ({ order }) => {
 						}
 					>
 						{isDeleted ? (
-							<i class="fa-solid fa-check"></i>
+							<i className="fa-solid fa-check"></i>
 						) : isDeleting ? (
 							<i className="fa-solid fa-cog fa-spin"></i>
 						) : (
-							<i class="fa-solid fa-trash"></i>
+							<i className="fa-solid fa-trash"></i>
 						)}
 					</div>
 				)}

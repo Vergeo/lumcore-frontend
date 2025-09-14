@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ItemNew = () => {
@@ -10,10 +10,12 @@ const ItemNew = () => {
 	const [price, setPrice] = useState(0);
 
 	const navigate = useNavigate();
+	const params = useParams();
 
 	const addItem = async () => {
 		try {
 			const newItem = {
+				index: params.index,
 				name,
 				category,
 				price,

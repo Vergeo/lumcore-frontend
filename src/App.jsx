@@ -40,7 +40,7 @@ function App() {
 					<Route element={<RequireAuth allowedRoles={["Manager"]} />}>
 						<Route path="items">
 							<Route index element={<ItemList />} />
-							<Route path="new" element={<ItemNew />} />
+							<Route path="new/:index" element={<ItemNew />} />
 							<Route path="edit/:itemId" element={<ItemEdit />} />
 						</Route>
 					</Route>

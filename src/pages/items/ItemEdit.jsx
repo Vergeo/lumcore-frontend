@@ -5,6 +5,7 @@ import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 const ItemEdit = () => {
 	const axiosPrivate = useAxiosPrivate();
+	const [index, setIndex] = useState("");
 	const [name, setName] = useState("");
 	const [category, setCategory] = useState("");
 	const [price, setPrice] = useState(0);
@@ -16,6 +17,7 @@ const ItemEdit = () => {
 		try {
 			const editedItem = {
 				id: params.itemId,
+				index,
 				name,
 				category,
 				price,
@@ -34,6 +36,7 @@ const ItemEdit = () => {
 		try {
 			const deletedItem = {
 				id: params.itemId,
+				index,
 				name,
 				category,
 				price,
@@ -54,6 +57,7 @@ const ItemEdit = () => {
 	const getItem = async () => {
 		try {
 			const res = await axiosPrivate.get(`/items/${params.itemId}`);
+			if (res.data.index) setIndex(res.data.index);
 			setName(res.data.name);
 			setCategory(res.data.category);
 			setPrice(res.data.price);
@@ -81,6 +85,21 @@ const ItemEdit = () => {
 						saveItem();
 					}}
 				>
+					<div className="flex">
+						<label htmlFor="index" className="w-20">
+							Index
+						</label>
+						<input
+							type="number"
+							id="index"
+							autoComplete="off"
+							onChange={(e) => {
+								setIndex(e.target.value);
+							}}
+							value={index}
+							className="bg-gray-200"
+						></input>
+					</div>
 					<div className="flex">
 						<label htmlFor="name" className="w-20">
 							Name

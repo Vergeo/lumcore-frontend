@@ -26,6 +26,10 @@ const OrderRecap = () => {
 				axiosPrivate.get("items"),
 				axiosPrivate.get("sales"),
 			]);
+			
+			resItems.data.sort(function (a, b) {
+				return a.index - b.index;
+			});
 
 			const today = new Date(date);
 			today.setHours(0, 0, 0, 0);
@@ -168,10 +172,10 @@ const OrderRecap = () => {
 													key={item.name}
 													className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 												>
-													<td className="border-l-1 border-(--bg-light) p-1">
+													<td className="p-1">
 														{item.name}
 													</td>
-													<td className="p-1">
+													<td className="border-l-1 border-(--bg-light) p-1">
 														{item.quantity}
 													</td>
 													<td className="border-l-1 border-(--bg-light) p-1">
@@ -184,11 +188,11 @@ const OrderRecap = () => {
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
 										<td
 											colSpan={2}
-											className="text-center font-bold rounded-bl-md p-1"
+											className="text-center font-bold rounded-bl-sm p-1"
 										>
 											Total
 										</td>
-										<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-md font-bold">
+										<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-sm font-bold">
 											{totalSale}
 										</td>
 									</tr>
@@ -221,10 +225,10 @@ const OrderRecap = () => {
 													key={item.name}
 													className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 												>
-													<td className="border-l-1 border-(--bg-light) p-1">
+													<td className="p-1">
 														{item.name}
 													</td>
-													<td className="p-1">
+													<td className="border-l-1 border-(--bg-light) p-1">
 														{item.quantity}
 													</td>
 												</tr>
@@ -234,7 +238,7 @@ const OrderRecap = () => {
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
 										<td
 											colSpan={2}
-											className="text-center font-bold rounded-bl-md p-1 rounded-br-md"
+											className="text-center font-bold rounded-bl-sm p-1 rounded-br-sm"
 										></td>
 									</tr>
 								</tbody>
@@ -260,28 +264,28 @@ const OrderRecap = () => {
 								</thead>
 								<tbody>
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg) text-center">
+										<td className="p-1">Cash</td>
 										<td className="border-l-1 border-(--bg-light) p-1">
-											Cash
+											{totalCash}
 										</td>
-										<td className="p-1">{totalCash}</td>
 									</tr>
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg) text-center">
+										<td className="p-1">QRIS</td>
 										<td className="border-l-1 border-(--bg-light) p-1">
-											QRIS
+											{totalQRIS}
 										</td>
-										<td className="p-1">{totalQRIS}</td>
 									</tr>
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg) text-center">
+										<td className="p-1">Transfer</td>
 										<td className="border-l-1 border-(--bg-light) p-1">
-											Transfer
+											{totalTransfer}
 										</td>
-										<td className="p-1">{totalTransfer}</td>
 									</tr>
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
-										<td className="border-l-1 border-(--bg-light) p-1 text-center font-bold">
+										<td className="p-1 text-center font-bold rounded-bl-sm">
 											Total
 										</td>
-										<td className="p-1 text-center font-bold">
+										<td className="border-l-1 border-(--bg-light) p-1 text-center font-bold rounded-br-sm">
 											{totalSale}
 										</td>
 									</tr>
