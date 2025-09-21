@@ -143,6 +143,11 @@ const Order = ({ order }) => {
 			<p>
 				<b>Kasir:</b> {order.cashier}
 			</p>
+			{order.payment && (
+				<p>
+					<b>Pembayaran:</b> {order.payment}
+				</p>
+			)}
 			<table className="w-full">
 				<thead>
 					<tr className="bg-(--bg-dark) text-(--text)">
