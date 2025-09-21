@@ -3,10 +3,13 @@ import Navbar from "../../components/Navbar";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
 import { style } from "../../styles/style";
+import useAuth from "../../hooks/useAuth";
 
 const OrderRecap = () => {
 	const axiosPrivate = useAxiosPrivate();
 	const navigate = useNavigate();
+	const { auth } = useAuth();
+	const [manager, setManager] = useState(false);
 
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -26,7 +29,7 @@ const OrderRecap = () => {
 				axiosPrivate.get("items"),
 				axiosPrivate.get("sales"),
 			]);
-			
+
 			resItems.data.sort(function (a, b) {
 				return a.index - b.index;
 			});
@@ -112,6 +115,7 @@ const OrderRecap = () => {
 	};
 
 	useEffect(() => {
+		setManager(auth?.roles?.includes("Manager"));
 		fetchData();
 	}, []);
 
@@ -125,16 +129,18 @@ const OrderRecap = () => {
 			<div className="w-full flex p-6 gap-6 flex-col">
 				<div className="flex justify-between">
 					<h1 className={style.h1}>Rekap Penjualan</h1>
-					<input
-						type="date"
-						name=""
-						id=""
-						onChange={(e) => {
-							setDate(e.target.value);
-						}}
-						value={date}
-						className="bg-(--bg-light) hover:bg-(--accent-light) transition-all ease-in p-2 w-fit rounded-sm cursor-pointer shadow-md"
-					/>
+					{manager && (
+						<input
+							type="date"
+							name=""
+							id=""
+							onChange={(e) => {
+								setDate(e.target.value);
+							}}
+							value={date}
+							className="bg-(--bg-light) hover:bg-(--accent-light) transition-all ease-in p-2 w-fit rounded-sm cursor-pointer shadow-md"
+						/>
+					)}
 				</div>
 				{isLoading ? (
 					<div className="flex justify-start items-center">
