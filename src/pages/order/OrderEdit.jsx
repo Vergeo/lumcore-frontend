@@ -27,7 +27,7 @@ const orderEdit = () => {
 		"Transfer",
 	]);
 	const [types, setTypes] = useState({
-		Offline: ["1", "2", "3", "4", "5", "6", "7", "8", "Bungkus"],
+		Offline: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Bungkus"],
 		Online: ["Gojek", "Grab", "Shopee"],
 	});
 	const [id, setId] = useState();

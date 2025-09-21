@@ -26,7 +26,7 @@ const orderNew = () => {
 		"Transfer",
 	]);
 	const [types, setTypes] = useState({
-		Offline: ["1", "2", "3", "4", "5", "6", "7", "8", "Bungkus"],
+		Offline: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Bungkus"],
 		Online: ["Gojek", "Grab", "Shopee"],
 	});
 	const [number, setNumber] = useState(0);
@@ -45,7 +45,6 @@ const orderNew = () => {
 				axiosPrivate.get("items"),
 			]);
 
-			
 			resItems.data.sort(function (a, b) {
 				return a.index - b.index;
 			});
