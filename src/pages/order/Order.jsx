@@ -116,6 +116,27 @@ const Order = ({ order }) => {
 		}
 	};
 
+	const convertTime = (date) => {
+		date = new Date(date);
+		// const date2 = date.toLocaleString();
+		// const date2 = new Date(date);
+		// console.log(date2);
+		return (
+			date.toLocaleString("id-ID", {
+				year: "numeric",
+				month: "numeric",
+				day: "numeric",
+			}) +
+			" " +
+			date.toLocaleString("en-US", {
+				hour: "numeric",
+				minute: "numeric",
+				second: "numeric",
+				hourCycle: "h24",
+			})
+		);
+	};
+
 	return (
 		<div
 			key={order._id}
@@ -142,6 +163,10 @@ const Order = ({ order }) => {
 			</p>
 			<p>
 				<b>Kasir:</b> {order.cashier}
+			</p>
+			<p>
+				<b>Tanggal: </b>
+				{convertTime(order.date)}
 			</p>
 			{order.payment && (
 				<p>
