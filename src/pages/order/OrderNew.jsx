@@ -79,8 +79,29 @@ const orderNew = () => {
 		}
 	};
 
+	const getOrderNumber = async () => {
+		try {
+			const res = await axiosPrivate.get("sales");
+			console.log(res.data);
+			var nextNumber = 0;
+			res.data.forEach((order) => {
+				if (order.number > nextNumber) {
+					nextNumber = order.number;
+					console.log(nextNumber, order._id);
+				}
+			});
+			nextNumber += 1;
+			setNumber(nextNumber);
+		} catch (error) {
+			if (error.status === 403) {
+				navigate("/");
+			}
+		}
+	};
+
 	useEffect(() => {
 		getMenuItems();
+		getOrderNumber();
 	}, []);
 
 	const addOrder = (itemToAdd, quantity) => {
@@ -292,7 +313,7 @@ const orderNew = () => {
 																);
 															}}
 														>
-															<i class="fa-solid fa-minus"></i>
+															<i className="fa-solid fa-minus"></i>
 														</div>
 														<div
 															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xs cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
@@ -303,7 +324,7 @@ const orderNew = () => {
 																);
 															}}
 														>
-															<i class="fa-solid fa-minus"></i>
+															<i className="fa-solid fa-minus"></i>
 														</div>
 														<div className="text-lg">
 															{item.quantity}
@@ -317,7 +338,7 @@ const orderNew = () => {
 																);
 															}}
 														>
-															<i class="fa-solid fa-plus"></i>
+															<i className="fa-solid fa-plus"></i>
 														</div>
 														<div
 															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-md cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
@@ -328,7 +349,7 @@ const orderNew = () => {
 																);
 															}}
 														>
-															<i class="fa-solid fa-plus"></i>
+															<i className="fa-solid fa-plus"></i>
 														</div>
 													</div>
 												</div>
