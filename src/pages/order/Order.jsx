@@ -53,10 +53,14 @@ const Order = ({ order }) => {
                     table {
                         width: 100%;
                     }
+
+					.dont-show {
+						display: none;
+					}
                 </style>
             </head>
             <body>
-                <div className="container">
+                <div class="container">
                     <h3>Mie Celor 99 Poligon</h3>
                     <h4>Jl. Amanzi Water Park</h4
                     ><h4>Citra Grand City</h4>
@@ -73,7 +77,7 @@ const Order = ({ order }) => {
                             </tr>
                             <tr>
                                 <td colspan="2" style="font-weight: bold">Total</td>
-                                <td className="price" style="font-weight: bold">${total}</td>
+                                <td class="price" style="font-weight: bold">${total}</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -85,10 +89,10 @@ const Order = ({ order }) => {
 		printWindow.document.close();
 
 		// Give the browser a moment to render, then print
-		printWindow.onload = () => {
-			printWindow.print();
-			printWindow.close();
-		};
+		// printWindow.onload = () => {
+		// 	printWindow.print();
+		// 	printWindow.close();
+		// };
 	};
 
 	var total = 0;
@@ -213,7 +217,7 @@ const Order = ({ order }) => {
 						);
 					})}
 					{order.type !== "Online" ? (
-						<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+						<tr className="dont-show border-t-1 border-(--bg-light) bg-(--bg-dark)">
 							<td
 								colSpan={2}
 								className="text-center font-bold rounded-bl-md p-1"
