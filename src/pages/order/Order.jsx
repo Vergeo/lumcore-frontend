@@ -89,10 +89,10 @@ const Order = ({ order }) => {
 		printWindow.document.close();
 
 		// Give the browser a moment to render, then print
-		// printWindow.onload = () => {
-		// 	printWindow.print();
-		// 	printWindow.close();
-		// };
+		printWindow.onload = () => {
+			printWindow.print();
+			printWindow.close();
+		};
 	};
 
 	var total = 0;
