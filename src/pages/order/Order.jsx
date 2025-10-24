@@ -12,6 +12,86 @@ const Order = ({ order }) => {
 	const [isDeleted, setIsDeleted] = useState(false);
 	const axiosPrivate = useAxiosPrivate();
 
+	const printKitchenReceipt = (order2, total) => {
+		let elementToPrint = document.getElementById(order2._id);
+		let printContent = elementToPrint.innerHTML;
+
+		const date = new Date(order2.date);
+		const dateHTML = `Date: ${date.toLocaleString("en-GB").split(",")[0]} ${
+			date.toLocaleString("en-GB").split(",")[1]
+		}`;
+
+		let printWindow = window.open("", "_blank");
+
+		printWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Document</title>
+                <style>
+                    * {
+                        margin: 0;
+                        padding: 0;
+                        box-sizing: border-box;
+                    }
+
+                    .container {
+                        width: 100%;
+                        background-color: aliceblue;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        padding: 10px;
+                    }
+
+                    .price {
+                        display: none;
+                    }
+
+                    table {
+                        width: 100%;
+                    }
+
+					.dont-show {
+						display: none;
+					}
+
+					h4 {
+						font-size: 30px
+					}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+					<h4>${order.number}</h4>
+                    <p>No. Meja: ${order.tableNumber}</p>
+                    <p>${dateHTML}</p>
+                    <hr style="width: 100%" />
+                    <table>
+                        <tbody>
+                        ${printContent}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3"><hr /></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </body>
+        </html>
+        `);
+		printWindow.document.close();
+
+		// Give the browser a moment to render, then print
+		printWindow.onload = () => {
+			printWindow.print();
+			printWindow.close();
+		};
+	};
+
 	const printReceipt = (order2, total) => {
 		let elementToPrint = document.getElementById(order2._id);
 		let printContent = elementToPrint.innerHTML;
@@ -62,9 +142,12 @@ const Order = ({ order }) => {
             <body>
                 <div class="container">
                     <h3>Mie Celor 99 Poligon</h3>
-                    <h4>Jl. Amanzi Water Park</h4
-                    ><h4>Citra Grand City</h4>
+                    <h4>Jl. Amanzi Water Park</h4>
+					<h4>Citra Grand City</h4>
+					<h4>0898 078 6688</h4>
                     <p>No. Nota: ${order.number}</p>
+                    <p>No. Meja: ${order.tableNumber}</p>
+                    <p>Kasir: ${order.cashier}</p>
                     <p>${dateHTML}</p>
                     <hr style="width: 100%" />
                     <table>
@@ -249,17 +332,32 @@ const Order = ({ order }) => {
 						<i className="fa-solid fa-pen-to-square"></i>
 					</div>
 				)}
-				<div
-					onClick={() => {
-						printReceipt(order, total);
-					}}
-					className={
-						style.button +
-						"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
-					}
-				>
-					<i className="fa-solid fa-print"></i>
-				</div>
+				{order.status === "active" && (
+					<div
+						onClick={() => {
+							printKitchenReceipt(order, total);
+						}}
+						className={
+							style.button +
+							"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
+						}
+					>
+						<i className="fa-solid fa-print"></i>
+					</div>
+				)}
+				{order.status === "finished" && (
+					<div
+						onClick={() => {
+							printReceipt(order, total);
+						}}
+						className={
+							style.button +
+							"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
+						}
+					>
+						<i className="fa-solid fa-print"></i>
+					</div>
+				)}
 				{manager && (
 					<div
 						onClick={() => {

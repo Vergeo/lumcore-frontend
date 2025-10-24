@@ -33,7 +33,6 @@ const OrderList = () => {
 				orderDate.setHours(0, 0, 0, 0);
 
 				if (today.getTime() === orderDate.getTime()) {
-					console.log("TEST");
 					if (order.status === "active") {
 						tempActiveOrders.push(order);
 					} else {
