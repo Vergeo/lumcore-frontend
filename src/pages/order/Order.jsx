@@ -35,15 +35,16 @@ const Order = ({ order }) => {
                         margin: 0;
                         padding: 0;
                         box-sizing: border-box;
+						font-size: 10pt;
                     }
 
                     .container {
                         width: 100%;
-                        background-color: aliceblue;
+						border: 1px solid black;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
-                        padding: 10px;
+						padding: 10px;
                     }
 
                     .price {
@@ -115,15 +116,16 @@ const Order = ({ order }) => {
                         margin: 0;
                         padding: 0;
                         box-sizing: border-box;
+						font-size: 10pt;
                     }
 
                     .container {
                         width: 100%;
-                        background-color: aliceblue;
+						border: 1px solid black;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
-                        padding: 10px;
+						padding: 10px;
                     }
 
                     .price {
