@@ -8,7 +8,7 @@ import { style } from "../../styles/style";
 const Login = () => {
 	const navigate = useNavigate();
 
-	const { setAuth } = useAuth();
+	const { auth, setAuth } = useAuth();
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [isVerifying, setIsVerifying] = useState(false);
@@ -19,20 +19,22 @@ const Login = () => {
 
 		try {
 			setIsVerifying(true);
-			const userObject = { username, password };
-			const res = await axios.post("/auth", userObject, {
+			const employeeObject = { username, password };
+			const res = await axios.post("/auth", employeeObject, {
 				withCredentials: true,
 			});
 
-			const accessToken = res?.data?.accessToken;
-			const roles = res?.data?.roles;
-			setAuth(res.data);
-
-			setAuth({ username, roles, accessToken });
-			navigate("/orders");
+			const { userId, roles, accessToken } = res.data;
+			await setAuth({ userId, username, roles, accessToken });
+			// console.log("Going to /order");
+			navigate("/order");
 			setIsVerifying(false);
 		} catch (err) {
-			setErrorMessage(err.response.data.message);
+			console.log(err);
+			setErrorMessage(
+				err?.response?.data?.message ||
+					"Login gagal. Silahkan coba lagi."
+			);
 			setIsVerifying(false);
 		}
 	};
@@ -92,13 +94,8 @@ const Login = () => {
 					)}
 					<div className="flex flex-col items-center">
 						<button
-							onClick={
-								!isVerifying
-									? handleLogin
-									: (e) => {
-											e.preventDefault();
-									  }
-							}
+							onClick={handleLogin}
+							disabled={isVerifying}
 							className={
 								isVerifying ? style.button_muted : style.button
 							}

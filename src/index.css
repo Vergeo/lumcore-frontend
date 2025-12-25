@@ -40,3 +40,9 @@ html {
 	--alert-blue: hsl(220, 50%, 60%);
 	--alert-blue-dark: hsl(220, 50%, 50%);
 }
+
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}

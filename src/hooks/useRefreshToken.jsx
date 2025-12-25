@@ -5,14 +5,23 @@ const useRefreshToken = () => {
 	const { setAuth } = useAuth();
 
 	const refresh = async () => {
-		const res = await axios.get("/auth/refresh", {
-			withCredentials: true,
-		});
-		setAuth((prev) => {
-			return { ...prev, accessToken: res.data.accessToken };
-		});
+		try {
+			const res = await axios.get("/auth/refresh", {
+				withCredentials: true,
+			});
 
-		return res.data.accessToken;
+			setAuth({
+				userId: res.data.userId,
+				username: res.data.username,
+				roles: res.data.roles,
+				accessToken: res.data.accessToken,
+			});
+
+			return res.data.accessToken;
+		} catch (err) {
+			setAuth(null);
+			throw err;
+		}
 	};
 	return refresh;
 };
