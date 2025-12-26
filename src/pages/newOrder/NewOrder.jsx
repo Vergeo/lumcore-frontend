@@ -67,8 +67,8 @@ const NewOrder = ({ order }) => {
             </head>
             <body>
                 <div class="container">
-					<h4>${order.number}</h4>
-                    <p>No. Meja: ${order.tableNumber}</p>
+					<h4>${order.orderNumber}</h4>
+                    <p>No. Meja: ${order.orderTable}</p>
                     <p>${dateHTML}</p>
                     <hr style="width: 100%" />
                     <table>
@@ -148,9 +148,9 @@ const NewOrder = ({ order }) => {
                     <h4>Jl. Amanzi Water Park</h4>
 					<h4>Citra Grand City</h4>
 					<h4>0898 078 6688</h4>
-                    <p>No. Nota: ${order.number}</p>
-                    <p>No. Meja: ${order.tableNumber}</p>
-                    <p>Kasir: ${order.cashier}</p>
+                    <p>No. Nota: ${order.orderNumber}</p>
+                    <p>No. Meja: ${order.orderTable}</p>
+                    <p>Kasir: ${order.employeeId.employeeName}</p>
                     <p>${dateHTML}</p>
                     <hr style="width: 100%" />
                     <table>
@@ -217,21 +217,24 @@ const NewOrder = ({ order }) => {
 				);
 
 				orderRes.data.orderDetail.map(async (menu) => {
-					menu.recipeId.stockUsed.map(async (stock) => {
-						const newStockMovement = {
-							stockId: stock.stockId,
-							stockQuantityChange: stock.quantity * menu.quantity,
-							movementDate: new Date(),
-							movementType: "Cancel Order",
-							orderId: id,
-							employeeId: auth.userId,
-						};
+					if (menu.recipeId) {
+						menu.recipeId.stockUsed.map(async (stock) => {
+							const newStockMovement = {
+								stockId: stock.stockId,
+								stockQuantityChange:
+									stock.quantity * menu.quantity,
+								movementDate: new Date(),
+								movementType: "Cancel Order",
+								orderId: id,
+								employeeId: auth.userId,
+							};
 
-						const stockMovementRes = await axiosPrivate.post(
-							"stockMovement/createStockMovement",
-							newStockMovement
-						);
-					});
+							const stockMovementRes = await axiosPrivate.post(
+								"stockMovement/createStockMovement",
+								newStockMovement
+							);
+						});
+					}
 				});
 			}
 

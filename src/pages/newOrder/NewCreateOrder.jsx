@@ -132,12 +132,20 @@ const NewCreateOrder = () => {
 
 			selectedMenu.forEach((menu) => {
 				if (menu.quantity > 0) {
-					orderDetail.push({
-						menuId: menu.menuId,
-						menuPrice: menu.menuPrice,
-						quantity: menu.quantity,
-						recipeId: menu.currentRecipeId,
-					});
+					if (menu.currentRecipeId) {
+						orderDetail.push({
+							menuId: menu.menuId,
+							menuPrice: menu.menuPrice,
+							quantity: menu.quantity,
+							recipeId: menu.currentRecipeId,
+						});
+					} else {
+						orderDetail.push({
+							menuId: menu.menuId,
+							menuPrice: menu.menuPrice,
+							quantity: menu.quantity,
+						});
+					}
 				}
 			});
 
@@ -175,12 +183,20 @@ const NewCreateOrder = () => {
 
 			selectedMenu.forEach((menu) => {
 				if (menu.quantity > 0) {
-					orderDetail.push({
-						menuId: menu.menuId,
-						menuPrice: menu.menuPrice,
-						quantity: menu.quantity,
-						recipeId: menu.currentRecipeId,
-					});
+					if (menu.currentRecipeId) {
+						orderDetail.push({
+							menuId: menu.menuId,
+							menuPrice: menu.menuPrice,
+							quantity: menu.quantity,
+							recipeId: menu.currentRecipeId,
+						});
+					} else {
+						orderDetail.push({
+							menuId: menu.menuId,
+							menuPrice: menu.menuPrice,
+							quantity: menu.quantity,
+						});
+					}
 				}
 			});
 
@@ -201,24 +217,27 @@ const NewCreateOrder = () => {
 			);
 
 			orderDetail.map(async (menu) => {
-				const recipeRes = await axiosPrivate.get(
-					"recipe/getRecipe/" + menu.recipeId
-				);
-				recipeRes.data.stockUsed.map(async (stock) => {
-					const newStockMovement = {
-						stockId: stock.stockId,
-						stockQuantityChange: -stock.quantity * menu.quantity,
-						movementDate: new Date(),
-						movementType: "Order",
-						orderId: orderRes.data.object._id,
-						employeeId: auth.userId,
-					};
-
-					const stockMovementRes = await axiosPrivate.post(
-						"stockMovement/createStockMovement",
-						newStockMovement
+				if (menu.recipeId) {
+					const recipeRes = await axiosPrivate.get(
+						"recipe/getRecipe/" + menu.recipeId
 					);
-				});
+					recipeRes.data.stockUsed.map(async (stock) => {
+						const newStockMovement = {
+							stockId: stock.stockId,
+							stockQuantityChange:
+								-stock.quantity * menu.quantity,
+							movementDate: new Date(),
+							movementType: "Order",
+							orderId: orderRes.data.object._id,
+							employeeId: auth.userId,
+						};
+
+						const stockMovementRes = await axiosPrivate.post(
+							"stockMovement/createStockMovement",
+							newStockMovement
+						);
+					});
+				}
 			});
 
 			setIsFinishing(false);

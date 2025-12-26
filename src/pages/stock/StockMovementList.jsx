@@ -18,7 +18,6 @@ const RoleList = () => {
 				"stockMovement/getAllStockMovements"
 			);
 			setStockMovements(res.data);
-			console.log(res.data);
 			setIsFetching(false);
 		} catch (error) {
 			if (error.code === 403) {
