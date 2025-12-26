@@ -17,7 +17,7 @@ const NewOrder = ({ order }) => {
 		let elementToPrint = document.getElementById(order2._id);
 		let printContent = elementToPrint.innerHTML;
 
-		const date = new Date(order2.date);
+		const date = new Date(order2.orderDate);
 		const dateHTML = `Date: ${date.toLocaleString("en-GB").split(",")[0]} ${
 			date.toLocaleString("en-GB").split(",")[1]
 		}`;
@@ -98,7 +98,7 @@ const NewOrder = ({ order }) => {
 		let elementToPrint = document.getElementById(order2._id);
 		let printContent = elementToPrint.innerHTML;
 
-		const date = new Date(order2.date);
+		const date = new Date(order2.orderDate);
 		const dateHTML = `Date: ${date.toLocaleString("en-GB").split(",")[0]} ${
 			date.toLocaleString("en-GB").split(",")[1]
 		}`;
@@ -300,9 +300,9 @@ const NewOrder = ({ order }) => {
 				<b>Tanggal: </b>
 				{convertTime(order.orderDate)}
 			</p>
-			{order.payment && (
+			{order.orderPaymentMethod && (
 				<p>
-					<b>Pembayaran:</b> {order.payment}
+					<b>Pembayaran:</b> {order.orderPaymentMethod}
 				</p>
 			)}
 			<table className="w-full">

@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import { style } from "../../styles/style";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import NewOrder from "./NewOrder";
 
 const NewEditOrder = () => {
 	const navigate = useNavigate();
@@ -236,6 +237,7 @@ const NewEditOrder = () => {
 					});
 				}
 			});
+
 			setIsFinishing(false);
 			navigate("/order");
 		} catch (error) {
