@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar";
 import { style } from "../../styles/style";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
+import PrintReceipt from "./PrintOrder";
 
 const NewCreateOrder = () => {
 	const navigate = useNavigate();
@@ -180,6 +181,7 @@ const NewCreateOrder = () => {
 			setErrorMessage("");
 			setIsFinishing(true);
 			var orderDetail = [];
+			var orderDetailPrint = [];
 
 			selectedMenu.forEach((menu) => {
 				if (menu.quantity > 0) {
@@ -197,6 +199,12 @@ const NewCreateOrder = () => {
 							quantity: menu.quantity,
 						});
 					}
+					orderDetailPrint.push({
+						menuId: menu.menuId,
+						menuPrice: menu.menuPrice,
+						quantity: menu.quantity,
+						menuName: menu.menuName,
+					});
 				}
 			});
 
@@ -209,6 +217,14 @@ const NewCreateOrder = () => {
 				orderStatus: "finished",
 				orderPaymentMethod,
 				orderDetail,
+			};
+
+			const orderPrint = {
+				orderNumber,
+				orderTable,
+				orderDate: new Date(),
+				employeeId: auth.userId,
+				orderDetailPrint,
 			};
 
 			const orderRes = await axiosPrivate.post(
@@ -239,6 +255,8 @@ const NewCreateOrder = () => {
 					});
 				}
 			});
+
+			PrintReceipt(orderPrint, totalPrice);
 
 			setIsFinishing(false);
 			navigate("/order");

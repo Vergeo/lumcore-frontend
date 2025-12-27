@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import { style } from "../../styles/style";
 import { useEffect, useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import NewOrder from "./NewOrder";
+import PrintReceipt from "./PrintOrder";
 
 const NewEditOrder = () => {
 	const navigate = useNavigate();
@@ -161,6 +161,7 @@ const NewEditOrder = () => {
 				"order/updateOrder",
 				updatedOrder
 			);
+
 			setIsSaving(false);
 			navigate("/order");
 		} catch (error) {
@@ -177,6 +178,7 @@ const NewEditOrder = () => {
 			setErrorMessage("");
 			setIsFinishing(true);
 			var orderDetail = [];
+			var orderDetailPrint = [];
 
 			selectedMenu.forEach((menu) => {
 				if (menu.quantity > 0) {
@@ -194,6 +196,12 @@ const NewEditOrder = () => {
 							quantity: menu.quantity,
 						});
 					}
+					orderDetailPrint.push({
+						menuId: menu.menuId,
+						menuPrice: menu.menuPrice,
+						quantity: menu.quantity,
+						menuName: menu.menuName,
+					});
 				}
 			});
 
@@ -201,12 +209,20 @@ const NewEditOrder = () => {
 				id: params.orderId,
 				orderNumber,
 				orderDate,
-				employeeId,
+				employeeId: employeeId._id,
 				orderType,
 				orderTable,
 				orderStatus: "finished",
 				orderDetail,
 				orderPaymentMethod,
+			};
+
+			const orderPrint = {
+				orderNumber,
+				orderTable,
+				orderDate,
+				employeeId: employeeId._id,
+				orderDetailPrint,
 			};
 
 			const res = await axiosPrivate.patch(
@@ -237,6 +253,8 @@ const NewEditOrder = () => {
 					});
 				}
 			});
+
+			PrintReceipt(orderPrint, totalPrice);
 
 			setIsFinishing(false);
 			navigate("/order");
