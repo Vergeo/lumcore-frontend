@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 
 import Login from "./pages/login/Login";
 import OrderList from "./pages/order/OrderList";
@@ -41,7 +41,7 @@ import NewOrderRecap from "./pages/newOrder/NewOrderRecap";
 
 function App() {
 	return (
-		<BrowserRouter>
+		<HashRouter>
 			<Routes>
 				<Route element={<Layout />}>
 					<Route path="/" element={<Login />} />
@@ -141,7 +141,7 @@ function App() {
 					</Route>
 				</Route>
 			</Routes>
-		</BrowserRouter>
+		</HashRouter>
 	);
 }
 

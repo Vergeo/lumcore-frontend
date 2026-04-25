@@ -21,11 +21,7 @@ const orderEdit = () => {
 	const [currentCategory, setCurrentCategory] = useState({});
 	const [totalPrice, setTotalPrice] = useState(0);
 
-	const [paymentMehods, setPaymentMethods] = useState([
-		"Cash",
-		"QRIS",
-		"Transfer",
-	]);
+	const [paymentMehods, setPaymentMethods] = useState(["Cash", "QRIS", "Transfer"]);
 	const [types, setTypes] = useState({
 		Offline: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Bungkus"],
 		Online: ["Gojek", "Grab", "Shopee"],
@@ -61,17 +57,17 @@ const orderEdit = () => {
 			setCategories(
 				resCategory.data.map((category) => {
 					const itemCount = resItems.data.filter(
-						(item) => item.category === category.name
+						(item) => item.category === category.name,
 					).length;
 
 					return { ...category, quantity: itemCount };
-				})
+				}),
 			);
 
 			setMenuItems(
 				resItems.data.map((item) => {
 					const orderedItem = resOrder.data.items.find(
-						(ordered) => ordered.name === item.name
+						(ordered) => ordered.name === item.name,
 					);
 
 					return {
@@ -80,7 +76,7 @@ const orderEdit = () => {
 						price: item.price,
 						quantity: orderedItem ? orderedItem.quantity : 0,
 					};
-				})
+				}),
 			);
 
 			setCurrentCategory(resCategory.data[0]);
@@ -103,8 +99,8 @@ const orderEdit = () => {
 			menuItems.map((item) =>
 				item.name === itemToAdd && item.quantity + quantity >= 0
 					? { ...item, quantity: item.quantity + quantity }
-					: item
-			)
+					: item,
+			),
 		);
 	};
 
@@ -213,8 +209,7 @@ const orderEdit = () => {
 						<div className="w-full flex flex-col gap-6">
 							<div className="w-full mb-2 grid grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] gap-3">
 								{categories.map((category) => {
-									return currentCategory.name ===
-										category.name ? (
+									return currentCategory.name === category.name ? (
 										<div
 											key={category.name}
 											className="flex p-2 gap-2 grow bg-(--accent) text-(--bg-light) shadow-sm rounded-sm transition-all ease-in"
@@ -228,14 +223,8 @@ const orderEdit = () => {
 												></i>
 											</div>
 											<div>
-												<div className="font-bold">
-													{category.name}
-												</div>
-												<div
-													className={
-														"text-sm text-(--bg-dark)"
-													}
-												>
+												<div className="font-bold">{category.name}</div>
+												<div className={"text-sm text-(--bg-dark)"}>
 													{category.quantity} Barang
 												</div>
 											</div>
@@ -257,15 +246,8 @@ const orderEdit = () => {
 												></i>
 											</div>
 											<div>
-												<div className="font-bold">
-													{category.name}
-												</div>
-												<div
-													className={
-														style.p_muted +
-														"text-sm"
-													}
-												>
+												<div className="font-bold">{category.name}</div>
+												<div className={style.p_muted + "text-sm"}>
 													{category.quantity} Barang
 												</div>
 											</div>
@@ -275,9 +257,7 @@ const orderEdit = () => {
 							</div>
 							<div className="grid grid-cols-[repeat(auto-fit,minmax(17rem,1fr))] gap-3">
 								{menuItems.map((item) => {
-									if (
-										item.category === currentCategory.name
-									) {
+									if (item.category === currentCategory.name) {
 										return (
 											<div
 												key={item.name}
@@ -295,17 +275,12 @@ const orderEdit = () => {
 													></i>
 												</div>
 												<div>
-													<div className="text-lg text">
-														{item.name}
-													</div>
+													<div className="text-lg text">{item.name}</div>
 													<div className="w-fit flex justify-center gap-3 items-center bg-(--bg) rounded-sm p-1">
 														<div
 															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-md cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
 															onClick={() => {
-																addOrder(
-																	item.name,
-																	-10
-																);
+																addOrder(item.name, -10);
 															}}
 														>
 															<i class="fa-solid fa-minus"></i>
@@ -313,10 +288,7 @@ const orderEdit = () => {
 														<div
 															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xs cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
 															onClick={() => {
-																addOrder(
-																	item.name,
-																	-1
-																);
+																addOrder(item.name, -1);
 															}}
 														>
 															<i class="fa-solid fa-minus"></i>
@@ -327,10 +299,7 @@ const orderEdit = () => {
 														<div
 															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-xs cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-2"
 															onClick={() => {
-																addOrder(
-																	item.name,
-																	1
-																);
+																addOrder(item.name, 1);
 															}}
 														>
 															<i class="fa-solid fa-plus"></i>
@@ -338,10 +307,7 @@ const orderEdit = () => {
 														<div
 															className="bg-(--bg-light) w-7 h-7 flex justify-center items-center rounded-sm text-(--accent) text-md cursor-pointer hover:bg-(--accent) hover:text-(--bg-light) transition-all ease-in shadow-sm p-4"
 															onClick={() => {
-																addOrder(
-																	item.name,
-																	10
-																);
+																addOrder(item.name, 10);
 															}}
 														>
 															<i class="fa-solid fa-plus"></i>
@@ -358,14 +324,11 @@ const orderEdit = () => {
 				</div>
 				<div
 					className={
-						"w-1/3 bg-(--bg-light) gap-2 justify-start p-3 items-start" +
-						style.card
+						"w-1/3 bg-(--bg-light) gap-2 justify-start p-3 items-start" + style.card
 					}
 				>
 					<div className="w-full flex flex-col gap-2">
-						{errorMessage && (
-							<div className={style.error}>{errorMessage}</div>
-						)}
+						{errorMessage && <div className={style.error}>{errorMessage}</div>}
 						<h3 className={style.h3}>Informasi Pesanan</h3>
 						<div className="flex gap-2 items-center">
 							<label htmlFor="number">No. Nota</label>
@@ -415,11 +378,7 @@ const orderEdit = () => {
 												value={type}
 												className="hidden"
 												checked={tableNumber === type}
-												onChange={(e) =>
-													setSelectedType(
-														e.target.value
-													)
-												}
+												onChange={(e) => setSelectedType(e.target.value)}
 											/>
 											{type}
 										</label>
@@ -447,11 +406,7 @@ const orderEdit = () => {
 												value={num}
 												className="hidden"
 												checked={tableNumber === num}
-												onChange={(e) =>
-													setTableNumber(
-														e.target.value
-													)
-												}
+												onChange={(e) => setTableNumber(e.target.value)}
 											/>
 											{num}
 										</label>
@@ -466,13 +421,10 @@ const orderEdit = () => {
 						<table className="w-full">
 							<thead>
 								<tr className="bg-(--bg-dark) text-(--text)">
-									<th className="rounded-tl-sm p-1">
-										Banyak
-									</th>
+									<th className="rounded-tl-sm p-1">Banyak</th>
 									<th
 										className={
-											"border-l-1 border-(--bg-light) p-1" +
-												selectedType !==
+											"border-l-1 border-(--bg-light) p-1" + selectedType !==
 												"Online" && "rounded-tr-sm"
 										}
 									>
@@ -493,16 +445,13 @@ const orderEdit = () => {
 												key={item.name}
 												className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 											>
-												<td className="p-1">
-													{item.quantity}
-												</td>
+												<td className="p-1">{item.quantity}</td>
 												<td className="border-l-1 border-(--bg-light) p-1">
 													{item.name}
 												</td>
 												{selectedType !== "Online" && (
 													<td className="border-l-1 border-(--bg-light) p-1">
-														{item.price *
-															item.quantity}
+														{item.price * item.quantity}
 													</td>
 												)}
 											</tr>
@@ -538,9 +487,7 @@ const orderEdit = () => {
 									: style.button_muted + "w-fit"
 							}
 							onClick={() => {
-								!isSaving && !isFinishing
-									? saveOrder()
-									: () => {};
+								!isSaving && !isFinishing ? saveOrder() : () => {};
 							}}
 						>
 							{!isSaving ? (
@@ -581,15 +528,9 @@ const orderEdit = () => {
 						</div>
 					</div>
 					<div
-						className={
-							!isSaving && !isFinishing
-								? style.button
-								: style.button_muted
-						}
+						className={!isSaving && !isFinishing ? style.button : style.button_muted}
 						onClick={() => {
-							!isSaving && !isFinishing
-								? finishOrder()
-								: () => {};
+							!isSaving && !isFinishing ? finishOrder() : () => {};
 						}}
 					>
 						{!isFinishing ? (

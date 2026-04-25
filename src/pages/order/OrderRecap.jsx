@@ -59,23 +59,17 @@ const OrderRecap = () => {
 				if (today.getTime() === orderTime.getTime()) {
 					if (order.type === "Online") {
 						order.items.forEach((item) => {
-							const idx = tempOnline.findIndex(
-								(i) => i.name === item.name
-							);
+							const idx = tempOnline.findIndex((i) => i.name === item.name);
 							if (idx !== -1) {
 								tempOnline[idx] = {
 									...tempOnline[idx],
-									quantity:
-										tempOnline[idx].quantity +
-										item.quantity,
+									quantity: tempOnline[idx].quantity + item.quantity,
 								};
 							}
 						});
 					} else {
 						order.items.forEach((item) => {
-							const idx = tempOffline.findIndex(
-								(i) => i.name === item.name
-							);
+							const idx = tempOffline.findIndex((i) => i.name === item.name);
 							if (idx !== -1) {
 								tempTotal += item.quantity * item.price;
 								if (order.payment === "Cash")
@@ -86,12 +80,9 @@ const OrderRecap = () => {
 									tempTransfer += item.quantity * item.price;
 								tempOffline[idx] = {
 									...tempOffline[idx],
-									quantity:
-										tempOffline[idx].quantity +
-										item.quantity,
+									quantity: tempOffline[idx].quantity + item.quantity,
 									totalPrice:
-										tempOffline[idx].totalPrice +
-										item.quantity * item.price,
+										tempOffline[idx].totalPrice + item.quantity * item.price,
 								};
 							}
 						});
@@ -150,18 +141,13 @@ const OrderRecap = () => {
 				) : (
 					<div className="flex flex-col gap-6">
 						<div
-							className={
-								style.card +
-								"w-full p-6 bg-(--bg-light) items-start gap-2"
-							}
+							className={style.card + "w-full p-6 bg-(--bg-light) items-start gap-2"}
 						>
 							<h2 className={style.h2}>Penjualan Offline</h2>
 							<table className="w-full">
 								<thead>
 									<tr className="bg-(--bg-dark) text-(--text)">
-										<th className="rounded-tl-sm p-1">
-											Item
-										</th>
+										<th className="rounded-tl-sm p-1">Item</th>
 										<th className="border-l-1 border-(--bg-light) p-1">
 											Banyak
 										</th>
@@ -178,9 +164,7 @@ const OrderRecap = () => {
 													key={item.name}
 													className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 												>
-													<td className="p-1">
-														{item.name}
-													</td>
+													<td className="p-1">{item.name}</td>
 													<td className="border-l-1 border-(--bg-light) p-1">
 														{item.quantity}
 													</td>
@@ -206,18 +190,13 @@ const OrderRecap = () => {
 							</table>
 						</div>
 						<div
-							className={
-								style.card +
-								"w-full p-6 bg-(--bg-light) items-start gap-2"
-							}
+							className={style.card + "w-full p-6 bg-(--bg-light) items-start gap-2"}
 						>
 							<h2 className={style.h2}>Penjualan Online</h2>
 							<table className="w-full">
 								<thead>
 									<tr className="bg-(--bg-dark) text-(--text)">
-										<th className="rounded-tl-sm p-1">
-											Item
-										</th>
+										<th className="rounded-tl-sm p-1">Item</th>
 										<th className="border-l-1 border-(--bg-light) p-1 rounded-tr-sm">
 											Banyak
 										</th>
@@ -231,9 +210,7 @@ const OrderRecap = () => {
 													key={item.name}
 													className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 												>
-													<td className="p-1">
-														{item.name}
-													</td>
+													<td className="p-1">{item.name}</td>
 													<td className="border-l-1 border-(--bg-light) p-1">
 														{item.quantity}
 													</td>
@@ -251,18 +228,13 @@ const OrderRecap = () => {
 							</table>
 						</div>
 						<div
-							className={
-								style.card +
-								"w-full p-6 bg-(--bg-light) items-start gap-2"
-							}
+							className={style.card + "w-full p-6 bg-(--bg-light) items-start gap-2"}
 						>
 							<h2 className={style.h2}>Distribusi Pembayaran</h2>
 							<table className="w-full">
 								<thead>
 									<tr className="bg-(--bg-dark) text-(--text)">
-										<th className="rounded-tl-sm p-1">
-											Metode
-										</th>
+										<th className="rounded-tl-sm p-1">Metode</th>
 										<th className="border-l-1 border-(--bg-light) p-1 rounded-tr-sm">
 											Banyak
 										</th>

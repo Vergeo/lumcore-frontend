@@ -237,8 +237,7 @@ const Order = ({ order }) => {
 			<div className="w-full flex justify-center">
 				<h2
 					className={
-						style.h2 +
-						"bg-(--accent) text-(--bg-light) py-1 px-3 rounded-sm shadow-sm"
+						style.h2 + "bg-(--accent) text-(--bg-light) py-1 px-3 rounded-sm shadow-sm"
 					}
 				>
 					{order.number}
@@ -268,9 +267,8 @@ const Order = ({ order }) => {
 						<th className="rounded-tl-sm p-1">Byk</th>
 						<th
 							className={
-								"border-l-1 border-(--bg-light) p-1" +
-									order.type !==
-									"Online" && "rounded-tr-sm"
+								"border-l-1 border-(--bg-light) p-1" + order.type !== "Online" &&
+								"rounded-tr-sm"
 							}
 						>
 							Item
@@ -340,8 +338,7 @@ const Order = ({ order }) => {
 							printKitchenReceipt(order, total);
 						}}
 						className={
-							style.button +
-							"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
+							style.button + "bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
 						}
 					>
 						<i className="fa-solid fa-print"></i>
@@ -353,8 +350,7 @@ const Order = ({ order }) => {
 							printReceipt(order, total);
 						}}
 						className={
-							style.button +
-							"bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
+							style.button + "bg-(--light-gray) hover:bg-(--gray) text-(--bg-light)"
 						}
 					>
 						<i className="fa-solid fa-print"></i>

@@ -55,21 +55,19 @@ const OrderRecap = () => {
 					if (order.orderType === "Online") {
 						order.orderDetail.forEach((menu) => {
 							const idx = tempOnline.findIndex(
-								(i) => i.menuName === menu.menuId.menuName
+								(i) => i.menuName === menu.menuId.menuName,
 							);
 							if (idx !== -1) {
 								tempOnline[idx] = {
 									...tempOnline[idx],
-									quantity:
-										tempOnline[idx].quantity +
-										menu.quantity,
+									quantity: tempOnline[idx].quantity + menu.quantity,
 								};
 							}
 						});
 					} else if (order.orderType === "Offline") {
 						order.orderDetail.forEach((menu) => {
 							const idx = tempOffline.findIndex(
-								(i) => i.menuName === menu.menuId.menuName
+								(i) => i.menuName === menu.menuId.menuName,
 							);
 							if (idx !== -1) {
 								tempTotal += menu.quantity * menu.menuPrice;
@@ -77,16 +75,11 @@ const OrderRecap = () => {
 									tempCash += menu.quantity * menu.menuPrice;
 								else if (order.orderPaymentMethod === "QRIS")
 									tempQRIS += menu.quantity * menu.menuPrice;
-								else if (
-									order.orderPaymentMethod === "Transfer"
-								)
-									tempTransfer +=
-										menu.quantity * menu.menuPrice;
+								else if (order.orderPaymentMethod === "Transfer")
+									tempTransfer += menu.quantity * menu.menuPrice;
 								tempOffline[idx] = {
 									...tempOffline[idx],
-									quantity:
-										tempOffline[idx].quantity +
-										menu.quantity,
+									quantity: tempOffline[idx].quantity + menu.quantity,
 									totalPrice:
 										tempOffline[idx].totalPrice +
 										menu.quantity * menu.menuPrice,
@@ -133,11 +126,7 @@ const OrderRecap = () => {
 							name=""
 							id=""
 							onChange={(e) => {
-								setDate(
-									new Date(e.target.value).toLocaleDateString(
-										"en-CA"
-									)
-								);
+								setDate(new Date(e.target.value).toLocaleDateString("en-CA"));
 							}}
 							value={date}
 							className="bg-(--bg-light) hover:bg-(--accent-light) transition-all ease-in p-2 w-fit rounded-sm cursor-pointer shadow-md"
@@ -152,18 +141,13 @@ const OrderRecap = () => {
 				) : (
 					<div className="flex flex-col gap-6">
 						<div
-							className={
-								style.card +
-								"w-full p-6 bg-(--bg-light) items-start gap-2"
-							}
+							className={style.card + "w-full p-6 bg-(--bg-light) items-start gap-2"}
 						>
 							<h2 className={style.h2}>Penjualan Offline</h2>
 							<table className="w-full">
 								<thead>
 									<tr className="bg-(--bg-dark) text-(--text)">
-										<th className="rounded-tl-sm p-1">
-											Item
-										</th>
+										<th className="rounded-tl-sm p-1">Item</th>
 										<th className="border-l-1 border-(--bg-light) p-1">
 											Banyak
 										</th>
@@ -180,16 +164,12 @@ const OrderRecap = () => {
 													key={menu.menuName}
 													className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 												>
-													<td className="p-1">
-														{menu.menuName}
-													</td>
+													<td className="p-1">{menu.menuName}</td>
 													<td className="border-l-1 border-(--bg-light) p-1">
 														{menu.quantity}
 													</td>
 													<td className="border-l-1 border-(--bg-light) p-1">
-														{menu.totalPrice.toLocaleString(
-															"id-ID"
-														)}
+														{menu.totalPrice.toLocaleString("id-ID")}
 													</td>
 												</tr>
 											);
@@ -206,22 +186,28 @@ const OrderRecap = () => {
 											{totalSale.toLocaleString("id-ID")}
 										</td>
 									</tr>
+									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
+										<td
+											colSpan={2}
+											className="text-center font-bold rounded-bl-sm p-1"
+										>
+											PPN
+										</td>
+										<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-sm font-bold">
+											{(totalSale * 0.1).toLocaleString("id-ID")}
+										</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
 						<div
-							className={
-								style.card +
-								"w-full p-6 bg-(--bg-light) items-start gap-2"
-							}
+							className={style.card + "w-full p-6 bg-(--bg-light) items-start gap-2"}
 						>
 							<h2 className={style.h2}>Penjualan Online</h2>
 							<table className="w-full">
 								<thead>
 									<tr className="bg-(--bg-dark) text-(--text)">
-										<th className="rounded-tl-sm p-1">
-											Item
-										</th>
+										<th className="rounded-tl-sm p-1">Item</th>
 										<th className="border-l-1 border-(--bg-light) p-1 rounded-tr-sm">
 											Banyak
 										</th>
@@ -235,9 +221,7 @@ const OrderRecap = () => {
 													key={menu.menuName}
 													className="border-t-1 border-(--bg-light) bg-(--bg) text-center"
 												>
-													<td className="p-1">
-														{menu.menuName}
-													</td>
+													<td className="p-1">{menu.menuName}</td>
 													<td className="border-l-1 border-(--bg-light) p-1">
 														{menu.quantity}
 													</td>
@@ -255,18 +239,13 @@ const OrderRecap = () => {
 							</table>
 						</div>
 						<div
-							className={
-								style.card +
-								"w-full p-6 bg-(--bg-light) items-start gap-2"
-							}
+							className={style.card + "w-full p-6 bg-(--bg-light) items-start gap-2"}
 						>
 							<h2 className={style.h2}>Distribusi Pembayaran</h2>
 							<table className="w-full">
 								<thead>
 									<tr className="bg-(--bg-dark) text-(--text)">
-										<th className="rounded-tl-sm p-1">
-											Metode
-										</th>
+										<th className="rounded-tl-sm p-1">Metode</th>
 										<th className="border-l-1 border-(--bg-light) p-1 rounded-tr-sm">
 											Banyak
 										</th>
@@ -288,9 +267,7 @@ const OrderRecap = () => {
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg) text-center">
 										<td className="p-1">Transfer</td>
 										<td className="border-l-1 border-(--bg-light) p-1">
-											{totalTransfer.toLocaleString(
-												"id-ID"
-											)}
+											{totalTransfer.toLocaleString("id-ID")}
 										</td>
 									</tr>
 									<tr className="border-t-1 border-(--bg-light) bg-(--bg-dark)">
