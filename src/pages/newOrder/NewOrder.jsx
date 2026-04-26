@@ -166,12 +166,12 @@ const NewOrder = ({ order }) => {
                                 <td class="price" style="font-weight: bold">Rp ${total.toLocaleString("id-Id")}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" style="font-weight: bold">PPN</td>
-                                <td class="price" style="font-weight: bold">Rp ${(total * 0.1).toLocaleString("id-Id")}</td>
+                                <td colspan="2" style="font-weight: bold">PPN 11%</td>
+                                <td class="price" style="font-weight: bold">Rp ${(total * 0.11).toLocaleString("id-Id")}</td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="font-weight: bold">Total</td>
-                                <td class="price" style="font-weight: bold">Rp ${(total + total * 0.1).toLocaleString("id-Id")}</td>
+                                <td class="price" style="font-weight: bold">Rp ${(total + total * 0.11).toLocaleString("id-Id")}</td>
                             </tr>
                         </tfoot>
                     </table>

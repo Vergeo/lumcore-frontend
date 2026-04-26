@@ -191,10 +191,10 @@ const OrderRecap = () => {
 											colSpan={2}
 											className="text-center font-bold rounded-bl-sm p-1"
 										>
-											PPN
+											PPN 11%
 										</td>
 										<td className="border-l-1 p-1 border-(--bg-light) text-center rounded-br-sm font-bold">
-											{(totalSale * 0.1).toLocaleString("id-ID")}
+											{(totalSale * 0.11).toLocaleString("id-ID")}
 										</td>
 									</tr>
 								</tbody>
